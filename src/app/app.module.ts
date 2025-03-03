@@ -1,5 +1,6 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { Inject, NgModule, PLATFORM_ID } from '@angular/core';
+import { TranslateModule,TranslateService,TranslateStore, TranslateLoader } from '@ngx-translate/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { NavigationEnd, Router, RouterModule, UrlSerializer } from '@angular/router';
 import { filter } from 'rxjs/operators';
@@ -10,6 +11,12 @@ import { routes } from './app.routes';
 import { HomePageComponent } from './core/components/home-page/home-page.component';
 import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
+import {TranslateHttpLoader} from "@ngx-translate/http-loader";
+import {HttpClient} from "@angular/common/http";
+
+export function createTranslateLoader(http: HttpClient) {
+    return new TranslateHttpLoader(http, './assets/locales/', '.json');
+}
 
 @NgModule({
     declarations: [
@@ -26,13 +33,26 @@ import { SharedModule } from './shared/shared.module';
         //     enabled: environment.production,
         //     registrationStrategy: 'registerWithDelay:5000',
         // }),
+        TranslateModule.forChild(
+            {
+                loader: {
+                    provide: TranslateLoader,
+                    useFactory: (createTranslateLoader),
+                    deps: [HttpClient]
+                }
+
+            })
     ],
-    providers: [NgEventBus],
+    providers: [
+        NgEventBus,
+        TranslateStore
+    ],
     bootstrap: [AppComponent],
 })
 export class AppModule {
 
     constructor(
+        private translate: TranslateService,
         private router: Router,
         private urlSerializer: UrlSerializer,
         @Inject(PLATFORM_ID) private platformId: any,
@@ -41,6 +61,8 @@ export class AppModule {
         if (isPlatformBrowser(this.platformId)) {
             this.handleScrollOnNavigations();
         }
+
+        translate.setDefaultLang('el');
     }
 
     /**

@@ -3,7 +3,10 @@
   "compilerOptions": {
     "outDir": "../out-tsc/app-server",
     "baseUrl": ".",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": [
+      "@angular/localize"
+    ]
   },
   "angularCompilerOptions": {
     "entryModule": "app/app.server.module#AppServerModule"

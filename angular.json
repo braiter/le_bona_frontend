@@ -13,6 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "localize": ["en-US"],
             "outputPath": "dist/browser",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -76,6 +77,20 @@
                   "with": "src/environments/environment.docker.ts"
                 }
               ]
+            },
+            "en": {
+              "localize": ["en"],
+              "outputPath": "dist/le-bona-en/",
+              "i18nFile": "src/locale/messages.en.xlf",
+              "i18nFormat": "xlf",
+              "i18nLocale": "en"
+            },
+            "el": {
+              "localize": ["el"],
+              "outputPath": "dist/le-bona-el/",
+              "i18nFile": "src/locale/messages.el.xlf",
+              "i18nFormat": "xlf",
+              "i18nLocale": "el"
             }
           }
         },
@@ -87,6 +102,9 @@
           "configurations": {
             "production": {
               "browserTarget": "reference-storefront:build:production"
+            },
+            "en": {
+              "browserTarget": "angular.io-example:build:development,en"
             }
           }
         },

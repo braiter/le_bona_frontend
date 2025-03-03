@@ -178,9 +178,10 @@ export class ProductListComponent implements OnInit {
         this.colors$ = combineLatest(this.collection$, this.language$).pipe(
             switchMap(([collection, language]) => {
                 const facetId = collection?.filters[0].args.find(facet => facet.name === 'facetValueIds');
+                console.log(facetId);
 
                 return this.dataService.query<GetProductColorsQuery, GetProductColorsQueryVariables>(GET_PRODUCT_COLORS, {
-                    id: JSON.parse(facetId?.value ? facetId?.value: '')[0],
+                    id: facetId? JSON.parse(facetId?.value ? facetId?.value: '')[0]: null,
                     languageCode: language
                 },'network-only');
             }),
@@ -204,11 +205,14 @@ export class ProductListComponent implements OnInit {
                             );
 
                             const product = products.find((product: any) => product.facetValues.find((facet: any) => facet.id === colorId));
-                            const color = product.facetValues.find((facet: any) => facet.id === colorId);
+                            let color;
+                            if (product) {
+                                color = product.facetValues.find((facet: any) => facet.id === colorId);
+                            }
 
                             return {
                                 ...item,
-                                color: color.name
+                                color: color? color.name: null
                             };
                         });
                 })

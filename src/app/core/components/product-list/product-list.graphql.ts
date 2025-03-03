@@ -37,6 +37,7 @@ export const SEARCH_PRODUCTS = gql`
                     facet {
                         id
                         name
+                        code
                     }
                 }
             }

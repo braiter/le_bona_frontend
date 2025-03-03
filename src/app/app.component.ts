@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, LOCALE_ID } from '@angular/core';
 import { Router, RouterEvent } from '@angular/router';
 import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
@@ -35,9 +35,9 @@ export class AppComponent implements OnInit {
             {name: 'Press', href: '#'},
         ],
         topMenu: [
-            {name: 'Products', name_el: 'Αγαθά', href: '/categories', active: false},
-            {name: 'About us', name_el: 'Για εμάς', href: '/about', active: false},
-            {name: 'Contacts', name_el: 'Επικοινωνία', href: '/contacts', active: false},
+            {key: 'header.top_menu.products', href: '/categories', active: false},
+            {key: 'header.top_menu.about', href: '/about', active: false},
+            {key: 'header.top_menu.contacts', href: '/contacts', active: false},
         ]
     };
 

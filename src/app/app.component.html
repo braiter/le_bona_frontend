@@ -12,7 +12,8 @@
                             <a class="nav-link"
                                [routerLink]="[menuItem.href]"
                                routerLinkActive="active-link"
-                            >{{ locale === 'el' ? menuItem.name_el : menuItem.name }}</a>
+                               i18n
+                            >{{ menuItem.key | translate }}</a>
                         </li>
                     </ul>
                 </div>

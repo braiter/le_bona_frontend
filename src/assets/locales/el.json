@@ -1,0 +1,16 @@
+{
+  "header": {
+    "top_menu": {
+      "products": "Αγαθά",
+      "about": "Για εμάς",
+      "contacts": "Επικοινωνία"
+    }
+  },
+  "product": {
+    "availability": {
+      "OUT_OF_STOCK": "Εξαντλήθηκε",
+      "LOW_STOCK": "Σχεδόν εξαντλημένο",
+      "IN_STOCK": "Διαθέσιμο"
+    }
+  }
+}
