@@ -16,6 +16,8 @@ export type AssetWithDimensions = Pick<AssetFragment, 'id' | 'preview' | 'width'
 export class AssetGalleryComponent implements OnInit, OnChanges, AfterViewInit {
     @Input() assets?: AssetWithDimensions[] = [];
     @Input() selectedAssetId: string;
+    @Input() color? = undefined;
+    @Input() language? : string | null;
     @ViewChild('mainPreview', {static: false})
     featuredAssetLoaded = false;
     private mainPreview: ElementRef<HTMLImageElement>;
@@ -81,5 +83,4 @@ export class AssetGalleryComponent implements OnInit, OnChanges, AfterViewInit {
         const index = this.assets.findIndex(a => a.id === assetId);
         this.gallery.loadAndOpen(index);
     }
-
 }

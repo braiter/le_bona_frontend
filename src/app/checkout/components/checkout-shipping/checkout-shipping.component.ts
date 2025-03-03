@@ -1,15 +1,23 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    Input,
+    OnDestroy,
+    OnInit,
+    ViewChild
+} from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, of, Subject } from 'rxjs';
-import { map, mergeMap, switchMap, takeUntil, tap } from 'rxjs/operators';
+import {map, mergeMap, switchMap, takeUntil, tap, withLatestFrom} from 'rxjs/operators';
 
 import {
     AddressFragment,
     CreateAddressInput,
     GetAvailableCountriesQuery,
     GetCustomerAddressesQuery,
-    GetEligibleShippingMethodsQuery,
+    GetEligibleShippingMethodsQuery, GetOrderForCheckoutQuery,
     GetOrderShippingDataQuery,
     SetCustomerForOrderMutation,
     SetCustomerForOrderMutationVariables,
@@ -48,6 +56,7 @@ export type AddressFormValue = Pick<AddressFragment, Exclude<keyof AddressFragme
 export class CheckoutShippingComponent implements OnInit, OnDestroy {
     @ViewChild('addressForm') addressForm: AddressFormComponent;
 
+    @Input() cart: any;
     customerAddresses$: Observable<AddressFragment[]>;
     availableCountries$: Observable<GetAvailableCountriesQuery['availableCountries']>;
     eligibleShippingMethods$: Observable<GetEligibleShippingMethodsQuery['eligibleShippingMethods']>;
@@ -67,7 +76,7 @@ export class CheckoutShippingComponent implements OnInit, OnDestroy {
                 private router: Router) {
     }
 
-    ngOnInit() {
+    async ngOnInit() {
         this.contactForm = this.formBuilder.group({
             firstName: ['', Validators.required],
             lastName: ['', Validators.required],
@@ -89,6 +98,8 @@ export class CheckoutShippingComponent implements OnInit, OnDestroy {
             map(data => data.eligibleShippingMethods),
         );
 
+        this.eligibleShippingMethods$.subscribe(data => console.log(data));
+
         shippingData$.pipe(
             map(data => data.activeOrder && data.activeOrder.customer),
             takeUntil(this.destroy$)
@@ -101,6 +112,15 @@ export class CheckoutShippingComponent implements OnInit, OnDestroy {
                 }, {emitEvent: false});
             }
         });
+
+        this.route.parent?.data
+            .pipe(
+                switchMap(data => data.activeOrder as Observable<GetOrderForCheckoutQuery['activeOrder']>),
+            ).subscribe(
+                (order) => {
+                    this.shippingMethodId = order?.shippingLines[0].shippingMethod.id
+                }
+            );
     }
 
     ngOnDestroy() {
@@ -157,6 +177,10 @@ export class CheckoutShippingComponent implements OnInit, OnDestroy {
 
     setShippingMethod(id: string) {
         this.shippingMethodId = id;
+
+        this.dataService.mutate<SetShippingMethodMutation, SetShippingMethodMutationVariables>(SET_SHIPPING_METHOD, {
+            id,
+        }).subscribe();
     }
 
     proceedToPayment() {

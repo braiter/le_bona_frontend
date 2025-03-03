@@ -53,6 +53,7 @@ export class CheckoutGuard  {
                         return false;
                     }
                 } else if (component === CheckoutPaymentComponent) {
+                    console.log('lol');
                     if (orderState === 'ArrangingPayment') {
                         return true;
                     } else if (orderState === 'AddingItems') {

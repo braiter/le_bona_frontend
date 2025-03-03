@@ -1,0 +1,22 @@
+.product-title {
+    font-family: 'Noto Serif Display';
+}
+
+.submit-button {
+    background: #c7418f;
+    //background: linear-gradient(90deg, rgba(194,67,141,1) 0%, rgba(139,39,100,1) 100%);
+
+    &:hover {
+        background-color: #b2347d;
+    }
+}
+
+.active-color {
+    border: 2px #272727 solid;
+    box-shadow: 0 0 10px #272727;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-left: -0.125rem;
+    margin-right: 0.375rem;
+    margin-bottom: -0.125rem;
+}

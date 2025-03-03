@@ -24,6 +24,7 @@ export class ProductListControlsComponent implements OnChanges {
     @Input() activeFacetValueIds: string[] = [];
     @Input() facetValues: SearchProductsQuery['search']['facetValues'] | null;
     @Input() totalResults = 0;
+    @Input() language: string | null;
     facets: FacetWithValues[];
     manuallyExpanded = false;
 

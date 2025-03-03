@@ -36,6 +36,12 @@ export const CART_FRAGMENT = gql`
             productVariant {
                 id
                 name
+                product {
+                    slug  
+                }
+                translations {
+                    languageCode
+                }
             }
             discounts {
                 amount

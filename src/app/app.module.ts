@@ -3,6 +3,7 @@ import { Inject, NgModule, PLATFORM_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { NavigationEnd, Router, RouterModule, UrlSerializer } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { NgEventBus } from 'ng-event-bus';
 
 import { AppComponent } from './app.component';
 import { routes } from './app.routes';
@@ -26,6 +27,7 @@ import { SharedModule } from './shared/shared.module';
         //     registrationStrategy: 'registerWithDelay:5000',
         // }),
     ],
+    providers: [NgEventBus],
     bootstrap: [AppComponent],
 })
 export class AppModule {

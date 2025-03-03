@@ -28,6 +28,7 @@ import { AssetPreviewPipe } from './pipes/asset-preview.pipe';
 import { FormatPricePipe } from './pipes/format-price.pipe';
 import { ProductUrlPipe } from './pipes/product-url.pipe';
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
+import { GetProductColorPipe } from "./pipes/get-product-color.pipe";
 
 const SHARED_DECLARATIONS = [
     CartContentsComponent,
@@ -49,6 +50,7 @@ const SHARED_DECLARATIONS = [
     ProductUrlPipe,
     AssetPreviewPipe,
     SafeHtmlPipe,
+    GetProductColorPipe,
     RadioCardComponent,
     RadioCardFieldsetComponent,
     CartTotalsComponent,

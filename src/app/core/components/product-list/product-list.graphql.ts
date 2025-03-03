@@ -25,6 +25,8 @@ export const SEARCH_PRODUCTS = gql`
                         y
                     }
                 }
+                facetIds
+                facetValueIds
             }
             totalItems
             facetValues {
@@ -64,6 +66,12 @@ export const GET_COLLECTION = gql`
                     ...Asset
                 }
                 name
+            }
+            filters {
+                args {
+                    value
+                    name
+                }
             }
         }
     }

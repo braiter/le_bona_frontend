@@ -123,12 +123,18 @@ export function apolloOptionsFactory(
     });
     const middleware = new ApolloLink((operation, forward) => {
         if (isPlatformBrowser(platformId)) {
-            operation.setContext({
-                headers: new HttpHeaders().set(
-                    'Authorization',
-                    `Bearer ${localStorage.getItem(AUTH_TOKEN_KEY) || null}`,
-                ),
-            });
+            let context: {headers: HttpHeaders | string, uri: string} = {headers: '', uri};
+            if (operation.variables.languageCode) {
+                context.uri = `${uri}?languageCode=${operation.variables.languageCode}`;
+                delete operation.variables.languageCode;
+            }
+
+            context.headers = new HttpHeaders().set(
+                'Authorization',
+                `Bearer ${localStorage.getItem(AUTH_TOKEN_KEY) || null}`,
+            );
+
+            operation.setContext({...context});
         }
         return forward(operation);
     });

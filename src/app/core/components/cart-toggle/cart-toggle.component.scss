@@ -1,0 +1,16 @@
+button {
+    color: #272727;
+
+    &:hover {
+        color: #4e4e4e;
+
+        span {
+            background: #4e4e4e;
+        }
+    }
+
+    span {
+        color: #f9f9f9;
+        background: #272727;
+    }
+}

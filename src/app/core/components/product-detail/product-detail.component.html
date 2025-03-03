@@ -1,6 +1,6 @@
 <div class="max-w-6xl mx-auto px-4">
     <h2 *ngIf="product; else titlePlaceholder"
-        class="text-3xl sm:text-5xl font-light tracking-tight text-gray-900 my-8">
+        class="text-3xl sm:text-5xl font-light tracking-tight text-gray-900 my-8 product-title">
         {{ product?.name ?? '  ' }}
     </h2>
     <ng-template #titlePlaceholder>
@@ -13,8 +13,11 @@
                                 [linkLast]="true"></vsf-collection-breadcrumbs>
     <div class="lg:grid lg:grid-cols-2 lg:gap-x-8 lg:items-start mt-4 md:mt-12">
         <vsf-asset-gallery
-            [assets]="product?.assets"
-            [selectedAssetId]="product?.featuredAsset?.id"></vsf-asset-gallery>
+            [assets]="images"
+            [color]="color"
+            [selectedAssetId]="product?.featuredAsset?.id"
+            [language]="language"
+        ></vsf-asset-gallery>
         <div class="mt-10 px-4 sm:px-0 sm:mt-16 lg:mt-0" #zoomPreviewArea>
             <div class="">
                 <h3 class="sr-only">Description</h3>
@@ -38,21 +41,22 @@
                 </select>
             </div>
 
-            <div class="mt-10 flex flex-col sm:flex-row sm:items-center">
+            <div class="mt-6 flex flex-col sm:flex-row sm:items-center">
                 <p class="text-3xl text-gray-900 mr-4">
                     {{ selectedVariant?.priceWithTax | formatPrice }}
                 </p>
                 <div class="flex sm:flex-col1 align-baseline">
                     <button
                         type="submit"
-                        class="max-w-xs flex-1 transition-colors border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-primary-500 sm:w-full"
+                        class="max-w-xs flex-1 transition-colors border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-primary-500 sm:w-full submit-button"
                         [ngClass]="{
                             'bg-gray-400': inFlight,
-                            'bg-primary-600 hover:bg-primary-700': !inFlight
                         }"
                         (click)="addToCart(selectedVariant, qty)"
                     >
-                        <div *ngIf="!product || !qtyInCart[selectedVariant.id]; else inCartCount">Add to cart</div>
+                        <div *ngIf="!product || !qtyInCart[selectedVariant.id]; else inCartCount">
+                            {{ language === 'el'? 'Αγορά': 'Add to cart' }}
+                        </div>
                         <ng-template #inCartCount>
                             <fa-icon icon="check" class="mr-2"></fa-icon>
                             <span>{{ qtyInCart[selectedVariant.id] }} in cart</span>
@@ -73,7 +77,27 @@
                     {{selectedVariant?.sku}}
                 </span>
             </div>
-            <section class="mt-12 pt-12 border-t text-xs">
+            <div class="mt-2 flex items-center space-x-2">
+                <span class="text-gray-500">
+<!--                    {{ selectedVariant.stockLevel === 'OUT_OF_STOCK'?  }}-->
+                </span>
+            </div>
+            <div class="mt-2 items-center">
+                <div class="text-2xl sm:text-2xl font-light tracking-tight text-gray-900 mb-2 mt-12">{{ language === 'el'? 'Χρωματιστά': 'Colors' }}:</div>
+                <div class="text-1xl sm:text-1xl font-light tracking-tight text-gray-900 mb-4"
+                     [ngClass]="i ? 'border-t pt-2': ''"
+                     *ngFor="let group of colors; index as i">
+                    <div class="mb-1">{{ group.name }}</div>
+
+                    <a class="rounded-full w-5 h-5 inline-block mr-2"
+                       *ngFor="let product of group.products"
+                       [routerLink]="['/product', product.translations[1].slug]"
+                       routerLinkActive="active-color"
+                       [ngStyle]="{'background': '#' + (product|getProductColor)}"></a>
+                </div>
+            </div>
+            <section class="border-t text-xs"
+                     [ngClass]="!colors.length? 'mt-12 pt-12': 'mt-6 pt-6'">
                 <h3 class="text-gray-600 font-bold mb-2">
                     Shipping & Returns
                 </h3>
@@ -96,9 +120,19 @@
             </section>
         </div>
     </div>
-    <div className="mt-24">
-        <vsf-top-reviews></vsf-top-reviews>
+    <div class="sm:col-span-5 lg:col-span-4 pt-20"
+         *ngIf="relatedProducts && relatedProducts.length">
+        <h3 class="text-2xl sm:text-4xl font-light tracking-tight text-gray-900 my-8 product-title">
+            Related Products
+        </h3>
+        <div class="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+            <vsf-product-card *ngFor="let variant of relatedProducts"
+                    [product]="variant">{{ variant.name }}</vsf-product-card>
+        </div>
     </div>
+<!--    <div className="mt-24">-->
+<!--        <vsf-top-reviews></vsf-top-reviews>-->
+<!--    </div>-->
 </div>
 
 <ng-template #addedToCartTemplate let-variant="variant" let-quantity="quantity" let-close="closeFn">

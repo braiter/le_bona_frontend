@@ -1,21 +1,23 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import { filter, map, switchMap, withLatestFrom } from 'rxjs/operators';
 
 import {
     AddToCartMutation,
-    AddToCartMutationVariables,
+    AddToCartMutationVariables, GetProductColorsQuery, GetProductColorsQueryVariables,
     GetProductDetailQuery,
-    GetProductDetailQueryVariables
+    GetProductDetailQueryVariables, SearchProductsQuery, SearchProductsQueryVariables, FacetValue, Product
 } from '../../../common/generated-types';
 import { notNullOrUndefined } from '../../../common/utils/not-null-or-undefined';
 import { DataService } from '../../providers/data/data.service';
 import { NotificationService } from '../../providers/notification/notification.service';
 import { StateService } from '../../providers/state/state.service';
+import {MetaData, NgEventBus} from "ng-event-bus";
 
-import { ADD_TO_CART, GET_PRODUCT_DETAIL } from './product-detail.graphql';
+import {ADD_TO_CART, GET_PRODUCT_COLORS, GET_PRODUCT_DETAIL} from './product-detail.graphql';
 import { ActiveService } from '../../providers/active/active.service';
+import {SEARCH_PRODUCTS} from "../product-list/product-list.graphql";
 
 type Variant = NonNullable<GetProductDetailQuery['product']>['variants'][number];
 type Collection = NonNullable<GetProductDetailQuery['product']>['collections'][number];
@@ -26,14 +28,20 @@ type Collection = NonNullable<GetProductDetailQuery['product']>['collections'][n
     styleUrls: ['./product-detail.component.scss'],
 })
 export class ProductDetailComponent implements OnInit, OnDestroy {
-
+    product$: Subscription;
     product: GetProductDetailQuery['product'];
+    relatedProducts: Array<any>;
     selectedAsset: { id: string; preview: string; };
     qtyInCart: { [id: string]: number; } = {};
     selectedVariant: Variant;
+    color: string| undefined;
+    colors: Array<any> = [];
+    colors$: Subscription;
     qty = 1;
     breadcrumbs: Collection['breadcrumbs'] | null = null;
     inFlight = false;
+    images: Array<any> = [];
+    language: string;
     @ViewChild('addedToCartTemplate', {static: true})
     private addToCartTemplate: TemplateRef<any>;
     private sub: Subscription;
@@ -42,8 +50,9 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
                 private stateService: StateService,
                 private notificationService: NotificationService,
                 private activeService: ActiveService,
-                private route: ActivatedRoute) {
-    }
+                private route: ActivatedRoute,
+                private eventBus: NgEventBus
+    ) {}
 
     ngOnInit() {
         const lastCollectionSlug$ = this.stateService.select(state => state.lastCollectionSlug);
@@ -52,11 +61,33 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
             filter(notNullOrUndefined),
         );
 
-        this.sub = productSlug$.pipe(
+        this.sub = this.stateService
+            .select(state => state.languageCode)
+            .subscribe((language) => {
+                this.language = language;
+                this.getProduct(productSlug$, lastCollectionSlug$, language);
+            });
+
+        this.activeService.activeOrder$.subscribe(order => {
+            this.qtyInCart = {};
+            for (const line of order?.lines ?? []) {
+                this.qtyInCart[line.productVariant.id] = line.quantity;
+            }
+        });
+
+
+    }
+
+    getProduct(productSlug$: Observable<string>, lastCollectionSlug$: Observable<string | null>, language: string) {
+        if (this.product$) {
+            this.product$.unsubscribe();
+        }
+
+        this.product$ = productSlug$.pipe(
             switchMap(slug => {
                 return this.dataService.query<GetProductDetailQuery, GetProductDetailQueryVariables>(GET_PRODUCT_DETAIL, {
-                        slug,
-                    },
+                        slug, languageCode: language
+                    }, 'network-only'
                 );
             }),
             map(data => data.product),
@@ -64,20 +95,36 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
             withLatestFrom(lastCollectionSlug$),
         ).subscribe(([product, lastCollectionSlug]) => {
             this.product = product;
-            if (this.product.featuredAsset) {
+            this.relatedProducts = product.customFields.related.map((item: any) => ({
+                ...item,
+                productAsset: item.featuredAsset,
+                productName: item.name,
+                priceWithTax: item.variants[0].priceWithTax
+            }));
+            if (this.product?.featuredAsset) {
                 this.selectedAsset = this.product.featuredAsset;
             }
             this.selectedVariant = product.variants[0];
+            console.log(this.selectedVariant);
             const collection = this.getMostRelevantCollection(product.collections, lastCollectionSlug);
             this.breadcrumbs = collection ? collection.breadcrumbs : [];
-        });
 
-        this.activeService.activeOrder$.subscribe(order => {
-            this.qtyInCart = {};
-            for (const line of order?.lines ?? []) {
-                this.qtyInCart[line.productVariant.id] = line.quantity;
+            this.images = product.assets.concat(this.product?.variants[0].assets);
+            this.color = product.facetValues.find((facet: FacetValue)=> facet.facet.code === 'hex-code')?.code;
+
+            if (this.colors$) {
+                this.colors$.unsubscribe();
             }
-        })
+
+            this.colors$ = this.dataService.query<GetProductColorsQuery, GetProductColorsQueryVariables>(GET_PRODUCT_COLORS, {
+                id: product.facetValues.find((facet: FacetValue) => facet.facet.code === 'category')?.id,
+                languageCode: language
+            },'network-only').pipe(
+                map(data => data.colors)
+            ).subscribe(colors => {
+                this.colors = colors;
+            });
+        });
     }
 
     ngOnDestroy() {
@@ -145,4 +192,5 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         })[0];
     }
 
+    protected readonly undefined = undefined;
 }

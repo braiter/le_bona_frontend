@@ -3461,9 +3461,11 @@ export type GetCollectionsQueryVariables = Exact<{
 }>;
 
 
-export type GetCollectionsQuery = { __typename?: 'Query', collections: { __typename?: 'CollectionList', items: Array<{ __typename?: 'Collection', id: string, name: string, slug: string, parent?: { __typename?: 'Collection', id: string, name: string, slug: string }, featuredAsset?: { __typename?: 'Asset', id: string, width: number, height: number, name: string, preview: string, focalPoint?: { __typename?: 'Coordinate', x: number, y: number } } }> } };
+export type GetCollectionsQuery = { __typename?: 'Query', collections: { __typename?: 'CollectionList', items: Array<{ __typename?: 'Collection', id: string, name: string, filters: Array<ConfigurableOperation>, slug: string, parent?: { __typename?: 'Collection', id: string, name: string, slug: string }, featuredAsset?: { __typename?: 'Asset', id: string, width: number, height: number, name: string, preview: string, focalPoint?: { __typename?: 'Coordinate', x: number, y: number } } }> } };
 
 export type AssetFragment = { __typename?: 'Asset', id: string, width: number, height: number, name: string, preview: string, focalPoint?: { __typename?: 'Coordinate', x: number, y: number } };
+
+export type ProductsForColorsFragment = { __typename?: 'ProductForColors', facetValues: Array<FacetValue>, translations: Array<CollectionTranslation> };
 
 export type CartFragment = { __typename?: 'Order', id: string, code: string, state: string, active: boolean, updatedAt: any, orderPlacedAt?: any, totalQuantity: number, subTotal: any, subTotalWithTax: any, total: any, totalWithTax: any, shipping: any, shippingWithTax: any, lines: Array<{ __typename?: 'OrderLine', id: string, unitPrice: any, unitPriceWithTax: any, quantity: number, linePriceWithTax: any, discountedLinePriceWithTax: any, featuredAsset?: { __typename?: 'Asset', id: string, width: number, height: number, name: string, preview: string, focalPoint?: { __typename?: 'Coordinate', x: number, y: number } }, productVariant: { __typename?: 'ProductVariant', id: string, name: string }, discounts: Array<{ __typename?: 'Discount', amount: any, amountWithTax: any, description: string, adjustmentSource: string, type: AdjustmentType }> }>, shippingLines: Array<{ __typename?: 'ShippingLine', priceWithTax: any, shippingMethod: { __typename?: 'ShippingMethod', id: string, code: string, name: string, description: string } }>, discounts: Array<{ __typename?: 'Discount', amount: any, amountWithTax: any, description: string, adjustmentSource: string, type: AdjustmentType }> };
 
@@ -3555,10 +3557,111 @@ export type GetCartTotalsQuery = { __typename?: 'Query', activeOrder?: { __typen
 
 export type GetProductDetailQueryVariables = Exact<{
   slug: Scalars['String'];
+  languageCode?: Scalars['String'];
+}>;
+
+export type GetProductColorsQuery = {
+  __typename?: 'Query',
+  colors: Array<{
+    name: string;
+    products: Array<{
+      facetValues: Array<FacetValue>,
+      translations: Array<CollectionTranslation>
+    }>
+  }>
+}
+
+export type GetProductColorsQueryVariables = Exact<{
+  id: Scalars['String']|undefined;
+  languageCode?: Scalars['String'];
 }>;
 
 
-export type GetProductDetailQuery = { __typename?: 'Query', product?: { __typename?: 'Product', id: string, name: string, description: string, variants: Array<{ __typename?: 'ProductVariant', id: string, name: string, price: any, priceWithTax: any, sku: string, options: Array<{ __typename?: 'ProductOption', code: string, name: string }> }>, featuredAsset?: { __typename?: 'Asset', id: string, width: number, height: number, name: string, preview: string, focalPoint?: { __typename?: 'Coordinate', x: number, y: number } }, assets: Array<{ __typename?: 'Asset', id: string, width: number, height: number, name: string, preview: string, focalPoint?: { __typename?: 'Coordinate', x: number, y: number } }>, collections: Array<{ __typename?: 'Collection', id: string, slug: string, breadcrumbs: Array<{ __typename?: 'CollectionBreadcrumb', id: string, name: string, slug: string }> }> } };
+
+export type GetProductDetailQuery = {
+  __typename?: 'Query',
+  product?: {
+    __typename?: 'Product',
+    id: string,
+    name: string,
+    description: string,
+    facetValues: Array<FacetValue>,
+    variants: Array<{
+      __typename?: 'ProductVariant',
+      id: string,
+      name: string,
+      price: any,
+      priceWithTax: any,
+      sku: string,
+      options: Array<{ __typename?: 'ProductOption', code: string, name: string }>,
+      assets: Array<{
+        __typename?: 'Asset',
+        id: string,
+        width: number,
+        height: number,
+        name: string,
+        preview: string,
+        focalPoint?: { __typename?: 'Coordinate', x: number, y: number }
+      }>
+    }>,
+    featuredAsset?: {
+      __typename?: 'Asset',
+      id: string,
+      width: number,
+      height: number,
+      name: string,
+      preview: string,
+      focalPoint?: { __typename?: 'Coordinate', x: number, y: number },
+    },
+    assets: Array<{
+      __typename?: 'Asset',
+      id: string,
+      width: number,
+      height: number,
+      name: string,
+      preview: string,
+      focalPoint?: { __typename?: 'Coordinate', x: number, y: number }
+    }>,
+    collections: Array<{
+      __typename?: 'Collection',
+      id: string,
+      slug: string,
+      breadcrumbs: Array<{ __typename?: 'CollectionBreadcrumb', id: string, name: string, slug: string }>
+    }>
+    customFields: {
+      __typename?: 'customFields',
+      related: Array<{
+        __typename?: 'related',
+        id: string,
+        name: string,
+        slug: string,
+        priceWithTax: number,
+        featuredAsset?: {
+          __typename?: 'Asset',
+          id: string,
+          width: number,
+          height: number,
+          name: string,
+          preview: string,
+          focalPoint?: { __typename?: 'Coordinate', x: number, y: number },
+        }
+        variants: Array<{
+          __typename?: 'ProductVariant',
+          id: string,
+          name: string,
+          price: any,
+          priceWithTax: any,
+          sku: string,
+        }>
+      }>,
+      colors: Array<{
+        __typename?: 'colors',
+        slug: string,
+        facetValues: Array<FacetValue>,
+      }>
+    }
+  }
+};
 
 export type AddToCartMutationVariables = Exact<{
   variantId: Scalars['ID'];
@@ -3570,18 +3673,20 @@ export type AddToCartMutation = { __typename?: 'Mutation', addItemToOrder: { __t
 
 export type SearchProductsQueryVariables = Exact<{
   input: SearchInput;
+  languageCode?: Scalars['String'];
 }>;
 
 
-export type SearchProductsQuery = { __typename?: 'Query', search: { __typename?: 'SearchResponse', totalItems: number, items: Array<{ __typename?: 'SearchResult', productId: string, slug: string, productName: string, description: string, priceWithTax: { __typename?: 'PriceRange', min: any, max: any } | { __typename?: 'SinglePrice' }, productAsset?: { __typename?: 'SearchResultAsset', id: string, preview: string, focalPoint?: { __typename?: 'Coordinate', x: number, y: number } } }>, facetValues: Array<{ __typename?: 'FacetValueResult', count: number, facetValue: { __typename?: 'FacetValue', id: string, name: string, facet: { __typename?: 'Facet', id: string, name: string } } }> } };
+export type SearchProductsQuery = { __typename?: 'Query', search: { __typename?: 'SearchResponse', totalItems: number, items: Array<{ __typename?: 'SearchResult', productId: string, slug: string, productName: string, description: string, priceWithTax: { __typename?: 'PriceRange', min: any, max: any } | { __typename?: 'SinglePrice' }, productAsset?: { __typename?: 'SearchResultAsset', id: string, preview: string, focalPoint?: { __typename?: 'Coordinate', x: number, y: number } }, facetIds: Array<Scalars['ID']>, facetValueIds: Array<Scalars['ID']>; }>, facetValues: Array<{ __typename?: 'FacetValueResult', count: number, facetValue: { __typename?: 'FacetValue', id: string, name: string, facet: { __typename?: 'Facet', id: string, name: string } } }> } };
 
 export type GetCollectionQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']>;
   slug?: InputMaybe<Scalars['String']>;
+  languageCode?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type GetCollectionQuery = { __typename?: 'Query', collection?: { __typename?: 'Collection', id: string, name: string, slug: string, description: string, featuredAsset?: { __typename?: 'Asset', id: string, width: number, height: number, name: string, preview: string, focalPoint?: { __typename?: 'Coordinate', x: number, y: number } }, breadcrumbs: Array<{ __typename?: 'CollectionBreadcrumb', id: string, slug: string, name: string }>, children?: Array<{ __typename?: 'Collection', id: string, slug: string, name: string, featuredAsset?: { __typename?: 'Asset', id: string, width: number, height: number, name: string, preview: string, focalPoint?: { __typename?: 'Coordinate', x: number, y: number } } }> } };
+export type GetCollectionQuery = { __typename?: 'Query', collection?: { __typename?: 'Collection', id: string, name: string, slug: string, filters: Array<ConfigurableOperation>, description: string, featuredAsset?: { __typename?: 'Asset', id: string, width: number, height: number, name: string, preview: string, focalPoint?: { __typename?: 'Coordinate', x: number, y: number } }, breadcrumbs: Array<{ __typename?: 'CollectionBreadcrumb', id: string, slug: string, name: string }>, children?: Array<{ __typename?: 'Collection', id: string, slug: string, name: string, featuredAsset?: { __typename?: 'Asset', id: string, width: number, height: number, name: string, preview: string, focalPoint?: { __typename?: 'Coordinate', x: number, y: number } } }> } };
 
 export type GetActiveOrderQueryVariables = Exact<{ [key: string]: never; }>;
 

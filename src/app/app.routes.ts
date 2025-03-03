@@ -2,11 +2,17 @@ import { Route } from '@angular/router';
 
 import { ProductDetailComponent } from './core/components/product-detail/product-detail.component';
 import { ProductListComponent } from './core/components/product-list/product-list.component';
+import {CollectionsListPageComponent} from "./core/components/collections-list-page/collections-list-page.component";
 
 export const routes: Route[] = [
     {
         path: 'category/:slug',
         component: ProductListComponent,
+        pathMatch: 'full',
+    },
+    {
+        path: 'categories',
+        component: CollectionsListPageComponent,
         pathMatch: 'full',
     },
     {

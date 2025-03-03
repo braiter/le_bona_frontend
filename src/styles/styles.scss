@@ -12,3 +12,24 @@
         @apply block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-primary-500 sm:text-sm;
     }
 }
+
+body {
+    background: #f9f9f9;
+    color: #272727;
+}
+
+.bg-primary-500 {
+    background-color: #c7418f;
+
+    &.hover\:bg-primary-600:hover {
+        background-color: #b2347d;
+    }
+}
+
+.btn-primary {
+    background-color: #c7418f;
+
+    &:hover {
+        background-color: #b2347d;
+    }
+}

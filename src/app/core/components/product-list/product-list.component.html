@@ -1,7 +1,7 @@
 <div class="max-w-6xl mx-auto px-4">
     <ng-container *ngIf="collection$ | async as collection">
         <div class="flex justify-between items-center">
-            <h2 class="text-3xl sm:text-5xl font-light tracking-tight text-gray-900 my-8">
+            <h2 class="text-3xl sm:text-5xl font-light my-8 collection-title">
                 {{collection.name}}
             </h2>
         </div>
@@ -30,12 +30,14 @@
             class="mb-4"
             [facetValues]="facetValues"
             [activeFacetValueIds]="activeFacetValueIds$ | async"
-            [totalResults]="unfilteredTotalItems"></vsf-product-list-controls>
+            [totalResults]="unfilteredTotalItems"
+            [language]="language$ | async"></vsf-product-list-controls>
         <div class="sm:col-span-5 lg:col-span-4">
             <div class="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
                 <ng-container *ngIf="(totalResults$ | async) !== null; else placeholders">
                     <vsf-product-card *ngFor="let product of products$ | async; trackBy: trackByProductId"
-                                      [product]="product"></vsf-product-card>
+                                      [product]="product"
+                                      [language]="language$ | async"></vsf-product-card>
                 </ng-container>
                 <ng-template #placeholders>
                     <vsf-product-card *ngFor="let product of placeholderProducts"
@@ -43,10 +45,12 @@
                 </ng-template>
             </div>
             <div class="load-more flex-fill" *ngIf="displayLoadMore$ | async">
-                <button class="btn btn-light btn-lg d-inline-flex align-items-center"
+                <button class="btn py-4 px-4 rounded-md mt-8 py-3 px-8 text-white btn-light btn-lg d-inline-flex align-items-center"
                         (click)="loadMore()"
-                        [disabled]="loading$ | async">
-                    Load more
+                        [disabled]="loading$ | async"
+                        *ngIf="language$ | async as language">
+                    {{ language === 'el' ? 'Περισσότερα': 'Load more' }}
+
                     <span [class.show]="loading$ | async"
                           class="loading-indicator spinner-grow spinner-grow-sm"
                           role="status"

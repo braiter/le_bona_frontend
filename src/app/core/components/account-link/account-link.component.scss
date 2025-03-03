@@ -1,10 +1,17 @@
 @import "variables";
 
 a.btn {
-    background-color: transparent;
-    border: none;
+    color: #272727;
 
     &:hover {
-        background-color: $light;
+        color: #4e4e4e;
+
+        span {
+            color: #4e4e4e;
+        }
+    }
+
+    span {
+        color: #272727;
     }
 }

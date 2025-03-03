@@ -37,3 +37,44 @@
 //        }
 //    }
 //}
+
+.images {
+    position: relative;
+}
+
+.svg {
+    position: absolute;
+    zoom: 38%;
+    left: 608px;
+    top: 344px;
+    filter: blur(2px);
+}
+
+.blink {
+    position: absolute;
+    width: 17px;
+    height: 21px;
+    left: 232px;
+    top: 131px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 14%, rgb(255, 255, 255, 0.5) 40%, rgba(255, 255, 255, 0) 73%, rgba(255, 255, 255, 0) 100%);
+    border-radius: 50%;
+}
+
+.color-type {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    border-radius: 50%;
+    font-size: 14px;
+    text-align: center;
+
+    .color {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+    }
+
+    .color-number {
+        color: #6b7280;
+    }
+}

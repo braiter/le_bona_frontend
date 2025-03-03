@@ -11,13 +11,15 @@ import { StateService } from './core/providers/state/state.service';
 @Component({
     selector: 'vsf-root',
     templateUrl: './app.component.html',
-    // styleUrls: ['./app.component.scss'],
+    styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
     cartDrawerVisible$: Observable<boolean>;
     mobileNavVisible$: Observable<boolean>;
     isHomePage$: Observable<boolean>;
     topCollections$: Observable<GetCollectionsQuery['collections']['items']>;
+
+    locale = 'en';
 
     navigation = {
         support: [
@@ -32,6 +34,11 @@ export class AppComponent implements OnInit {
             {name: 'Corporate responsibility', href: '#'},
             {name: 'Press', href: '#'},
         ],
+        topMenu: [
+            {name: 'Products', name_el: 'Αγαθά', href: '/categories', active: false},
+            {name: 'About us', name_el: 'Για εμάς', href: '/about', active: false},
+            {name: 'Contacts', name_el: 'Επικοινωνία', href: '/contacts', active: false},
+        ]
     };
 
     constructor(private router: Router,
@@ -51,6 +58,10 @@ export class AppComponent implements OnInit {
         }).pipe(
             map(({collections}) => collections.items)
         );
+
+        this.stateService
+            .select(state => state.languageCode)
+            .subscribe((language) => {this.locale  = language});
     }
 
     openCartDrawer() {

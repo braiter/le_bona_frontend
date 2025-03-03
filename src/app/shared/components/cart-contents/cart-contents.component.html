@@ -11,12 +11,12 @@
                     <div>
                         <div class="flex justify-between text-base font-medium text-gray-900">
                             <h3>
-                                <a [routerLink]="['/products', line.productVariant]">
+                                <a [routerLink]="['/product', line.productVariant.product.slug]">
                                     {{ line.productVariant.name }}
                                 </a>
                             </h3>
                             <p class="ml-4">
-                                {{ line.linePriceWithTax | formatPrice }}
+                                {{ line.unitPriceWithTax | formatPrice }}
                             </p>
                         </div>
                     </div>
@@ -27,7 +27,7 @@
                                     (click)="decrement(line)">
                                 <fa-icon aria-label="Remove 1" icon="minus"></fa-icon>
                             </button>
-                            <div class="qty">{{ line.quantity }}</div>
+                            <div class="qty"><ng-template [ngIf]="!canAdjustQuantities">x</ng-template>{{ line.quantity }}</div>
                             <button class="btn btn-sm"
                                     *ngIf="canAdjustQuantities"
                                     (click)="increment(line)">
@@ -36,7 +36,7 @@
                         </div>
                         <div class="total">
                             <div class="">
-                                {{ line.unitPriceWithTax | formatPrice }}
+                                {{ line.linePriceWithTax | formatPrice }}
                             </div>
                         </div>
                     </div>

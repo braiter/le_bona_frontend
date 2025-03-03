@@ -52,26 +52,34 @@
 //    min-height: 50vh;
 //}
 //
-//.no-results {
-//    text-align: center;
-//    margin: $spacer * 4 0;
-//    font-size: $font-size-lg;
-//    color: $gray-500;
-//    width: 100%;
-//}
-//
-//.load-more {
-//    text-align: center;
-//    width: 100%;
-//}
-//
-//.loading-indicator {
-//    width: 0;
-//    margin-left: 0;
-//    transition: width 0.2s, margin-left 0.2s;
-//
-//    &.show {
-//        width: 1rem;
-//        margin-left: calc($spacer / 2);
-//    }
-//}
+.no-results {
+    text-align: center;
+    margin: 4 * 4 0;
+    font-size: 16px;
+    width: 100%;
+}
+
+.load-more {
+    text-align: center;
+    width: 100%;
+
+    .btn {
+        background: #c7418f;
+    }
+}
+
+.loading-indicator {
+    width: 0;
+    margin-left: 0;
+    transition: width 0.2s, margin-left 0.2s;
+
+    &.show {
+        width: 1rem;
+        margin-left: calc(4 / 2);
+    }
+}
+
+
+.collection-title {
+    font-family: 'Noto Serif Display';
+}

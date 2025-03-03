@@ -1,0 +1,12 @@
+<div class="list mx-auto max-w-sm space-y-2 rounded-xl px-8 py-8 sm:flex sm:items-center sm:gap-x-6 sm:space-y-0 sm:py-4">
+    <div class="flag cursor-pointer"
+         (click)="selectLanguage('el')"
+         [class.active]="languageCode === 'el'">
+        <img class="mx-auto block h-6 rounded-full sm:mx-0 sm:shrink-0" src="assets/flags/el.png">
+    </div>
+    <div class="flag cursor-pointer"
+         (click)="selectLanguage('en')"
+         [class.active]="languageCode === 'en'">
+        <img class="mx-auto block h-6 rounded-full sm:mx-0 sm:shrink-0" src="assets/flags/en.png">
+    </div>
+</div>

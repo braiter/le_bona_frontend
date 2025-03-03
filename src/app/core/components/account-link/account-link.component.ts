@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 
@@ -10,10 +10,11 @@ import { StateService } from '../../providers/state/state.service';
 @Component({
     selector: 'vsf-account-link',
     templateUrl: './account-link.component.html',
-    // styleUrls: ['./account-link.component.scss'],
+    styleUrls: ['./account-link.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountLinkComponent implements OnInit {
+    @Input() language: string | null;
 
     activeCustomer$: Observable<GetActiveCustomerQuery['activeCustomer']>;
     constructor(private dataService: DataService,

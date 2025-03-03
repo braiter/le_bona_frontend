@@ -1014,6 +1014,15 @@ type PriceRange {
     min: Money!
 }
 
+type Color {
+    name: String
+    products: [Product]
+}
+
+type ColorList {
+    colors: [Color!]!
+}
+
 type Product implements Node {
     assets: [Asset!]!
     collections: [Collection!]!
@@ -1223,11 +1232,12 @@ type Query {
     """
     orderByCode(code: String!): Order
     "Get a Product either by id or slug. If neither 'id' nor 'slug' is specified, an error will result."
-    product(id: ID, slug: String): Product
+    product(id: ID, slug: String, languageCode: String): Product
     "Get a list of Products"
     products(options: ProductListOptions): ProductList!
     "Search Products based on the criteria set by the `SearchInput`"
     search(input: SearchInput!): SearchResponse!
+    colors(id: ID): ColorList
 }
 
 type Refund implements Node {
