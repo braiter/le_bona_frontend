@@ -4,19 +4,20 @@ import {
     Component,
     Input,
     OnDestroy,
-    OnInit,
-    ViewChild
+    OnInit, signal,
+    ViewChild, WritableSignal
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, of, Subject } from 'rxjs';
+import {from, Observable, of, Subject} from 'rxjs';
 import {map, mergeMap, switchMap, takeUntil, tap, withLatestFrom} from 'rxjs/operators';
 
 import {
+    AddPaymentMutation, AddPaymentMutationVariables,
     AddressFragment,
     CreateAddressInput,
     GetAvailableCountriesQuery,
-    GetCustomerAddressesQuery,
+    GetCustomerAddressesQuery, GetEligiblePaymentMethodsQuery,
     GetEligibleShippingMethodsQuery, GetOrderForCheckoutQuery,
     GetOrderShippingDataQuery,
     SetCustomerForOrderMutation,
@@ -44,13 +45,14 @@ import {
     SET_SHIPPING_METHOD,
     TRANSITION_TO_ARRANGING_PAYMENT,
 } from './checkout-shipping.graphql';
+import {ADD_PAYMENT, GET_ELIGIBLE_PAYMENT_METHODS} from "../checkout-payment/checkout-payment.graphql";
 
 export type AddressFormValue = Pick<AddressFragment, Exclude<keyof AddressFragment, 'country'>> & { countryCode: string; };
 
 @Component({
     selector: 'vsf-checkout-shipping',
     templateUrl: './checkout-shipping.component.html',
-    // styleUrls: ['./checkout-shipping.component.scss'],
+    styleUrls: ['./checkout-shipping.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckoutShippingComponent implements OnInit, OnDestroy {
@@ -64,6 +66,10 @@ export class CheckoutShippingComponent implements OnInit, OnDestroy {
     signedIn$: Observable<boolean>;
     shippingMethodId: string | undefined;
     contactForm: UntypedFormGroup;
+    VATvalid: boolean;
+    vat = '';
+    paymentMethod: any;
+    language$: Observable<string>;
     private destroy$ = new Subject<void>();
 
     constructor(private dataService: DataService,
@@ -77,6 +83,9 @@ export class CheckoutShippingComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
+        this.language$ = this.stateService
+            .select(state => state.languageCode);
+
         this.contactForm = this.formBuilder.group({
             firstName: ['', Validators.required],
             lastName: ['', Validators.required],
@@ -98,7 +107,7 @@ export class CheckoutShippingComponent implements OnInit, OnDestroy {
             map(data => data.eligibleShippingMethods),
         );
 
-        this.eligibleShippingMethods$.subscribe(data => console.log(data));
+        // this.eligibleShippingMethods$.subscribe(data => console.log(data));
 
         shippingData$.pipe(
             map(data => data.activeOrder && data.activeOrder.customer),
@@ -121,6 +130,12 @@ export class CheckoutShippingComponent implements OnInit, OnDestroy {
                     this.shippingMethodId = order?.shippingLines[0].shippingMethod.id
                 }
             );
+
+        this.dataService.query<GetEligiblePaymentMethodsQuery>(GET_ELIGIBLE_PAYMENT_METHODS)
+            .pipe(map(res => res.eligiblePaymentMethods))
+            .subscribe(paymentMethods => {
+                this.paymentMethod = paymentMethods[0];
+            });
     }
 
     ngOnDestroy() {
@@ -183,21 +198,57 @@ export class CheckoutShippingComponent implements OnInit, OnDestroy {
         }).subscribe();
     }
 
-    proceedToPayment() {
+    // proceedToPayment() {
+    //     const shippingMethodId = this.shippingMethodId;
+    //     if (shippingMethodId) {
+    //         this.stateService.select(state => state.signedIn).pipe(
+    //             mergeMap(signedIn => !signedIn ? this.setCustomerForOrder() || of({}) : of({})),
+    //             mergeMap(() =>
+    //                 this.dataService.mutate<SetShippingMethodMutation, SetShippingMethodMutationVariables>(SET_SHIPPING_METHOD, {
+    //                     id: shippingMethodId,
+    //                 }),
+    //             ),
+    //             mergeMap(() => this.dataService.mutate<TransitionToArrangingPaymentMutation>(TRANSITION_TO_ARRANGING_PAYMENT)),
+    //         ).subscribe((data) => {
+    //             this.router.navigate(['../payment'], {relativeTo: this.route});
+    //         });
+    //     }
+    // }
+
+    completeOrder() {
         const shippingMethodId = this.shippingMethodId;
-        if (shippingMethodId) {
-            this.stateService.select(state => state.signedIn).pipe(
-                mergeMap(signedIn => !signedIn ? this.setCustomerForOrder() || of({}) : of({})),
-                mergeMap(() =>
-                    this.dataService.mutate<SetShippingMethodMutation, SetShippingMethodMutationVariables>(SET_SHIPPING_METHOD, {
-                        id: shippingMethodId,
-                    }),
-                ),
-                mergeMap(() => this.dataService.mutate<TransitionToArrangingPaymentMutation>(TRANSITION_TO_ARRANGING_PAYMENT)),
-            ).subscribe((data) => {
-                this.router.navigate(['../payment'], {relativeTo: this.route});
-            });
-        }
+            if (shippingMethodId) {
+                this.stateService.select(state => state.signedIn).pipe(
+                    mergeMap(signedIn => !signedIn ? this.setCustomerForOrder() || of({}) : of({})),
+                    mergeMap(() =>
+                        this.dataService.mutate<SetShippingMethodMutation, SetShippingMethodMutationVariables>(SET_SHIPPING_METHOD, {
+                            id: shippingMethodId,
+                        }),
+                    ),
+                    mergeMap(() => this.dataService.mutate<TransitionToArrangingPaymentMutation>(TRANSITION_TO_ARRANGING_PAYMENT)),
+                ).subscribe((data) => {
+                    this.dataService.mutate<AddPaymentMutation, AddPaymentMutationVariables>(ADD_PAYMENT, {
+                        input: {
+                            method: this.paymentMethod.code,
+                            metadata: {},
+                        },
+                    })
+                        .subscribe(async ({addPaymentToOrder}) => {
+                            switch (addPaymentToOrder?.__typename) {
+                                case 'Order':
+                                    const order = addPaymentToOrder;
+                                    if (order && (order.state === 'PaymentSettled' || order.state === 'PaymentAuthorized')) {
+                                        await new Promise<void>(resolve => setTimeout(() => {
+                                            this.stateService.setState('activeOrderId', null);
+                                            resolve();
+                                        }, 500));
+                                        this.router.navigate(['../confirmation', order.code], {relativeTo: this.route});
+                                    }
+                                    break;
+                            }
+                        });
+                });
+            }
     }
 
     getId(method: { id: string }) {
@@ -237,4 +288,34 @@ export class CheckoutShippingComponent implements OnInit, OnDestroy {
     private isFormValue(input: AddressFormValue | AddressFragment): input is AddressFormValue {
         return typeof (input as any).countryCode === 'string';
     }
+
+    checkVat () {
+        // this.VATerror = this.signedIn$.pipe(map(() => false));
+
+        const params = new URLSearchParams();
+        params.append('countryCode', this.vat.substring(0,2));
+        params.append('vatNumber', this.vat.substring(2));
+
+        const checkVatUrl = `http://localhost:3020?${params}`;
+
+        const request = from(fetch(checkVatUrl));
+        request.subscribe({
+            next: async (data) => {
+
+                const json = await data.json();
+                if (json.error || !json.valid) {
+                    this.VATvalid = false;
+                } else {
+                    this.VATvalid = json.valid;
+                }
+                this.changeDetector.detectChanges();
+            },
+            error: (err) => { this.VATvalid = false; }
+        });
+    }
+
+    get VATError() {
+        return this.VATvalid === false;
+    }
+
 }

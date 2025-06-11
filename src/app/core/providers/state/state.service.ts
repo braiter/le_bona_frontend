@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import {Injectable, LOCALE_ID, Inject} from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
+// import {TranslateService} from "@ngx-translate/core";
 
 export interface AppState {
     signedIn: boolean;
@@ -19,7 +20,7 @@ export const initialState: AppState = {
     lastCollectionId: '',
     mobileNavMenuIsOpen: false,
     cartDrawerOpen: false,
-    languageCode: localStorage.languageCode || 'en'
+    languageCode: 'el'
 };
 
 /**
@@ -30,13 +31,21 @@ export const initialState: AppState = {
 })
 export class StateService {
     private state: AppState = initialState;
-    private readonly stateSubject = new BehaviorSubject<AppState>(initialState);
+    private readonly stateSubject: BehaviorSubject<AppState>;
 
-    constructor() {
+    constructor(
+        // private translate: TranslateService,
+        @Inject(LOCALE_ID) public locale: string
+    ) {
         if (typeof window !== 'undefined') {
             Object.defineProperty(window, 'appState', {
                 get: () => this.stateSubject.value,
             });
+
+            this.state.languageCode = this.locale;
+            this.stateSubject = new BehaviorSubject<AppState>(initialState);
+
+            // translate.setDefaultLang(localStorage.languageCode || 'el');
         }
     }
 

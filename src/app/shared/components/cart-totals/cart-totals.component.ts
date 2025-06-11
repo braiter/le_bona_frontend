@@ -9,6 +9,7 @@ import { CartFragment } from '../../../common/generated-types';
 })
 export class CartTotalsComponent implements OnInit {
     @Input() cart: CartFragment;
+    @Input() language: string;
   constructor() { }
 
   ngOnInit(): void {

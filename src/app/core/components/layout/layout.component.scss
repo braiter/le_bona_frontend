@@ -8,11 +8,11 @@
 }
 
 .content {
-    min-height: 60vh;
+    min-height: calc(100vh - 411px - 6rem);
 }
 
 .footer {
-    background-color: $gray-100;
-    margin-top: $spacer * 3;
-    padding: $spacer * 3 0;
+    //background-color: $gray-100;
+    //margin-top: $spacer * 3;
+    //padding: $spacer * 3 0;
 }

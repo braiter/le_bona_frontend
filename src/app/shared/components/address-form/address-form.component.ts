@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } f
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { AddressFragment, CountryFragment, OrderAddressFragment } from '../../../common/generated-types';
+import {Observable} from "rxjs";
+import {StateService} from "../../../core/providers/state/state.service";
 
 @Component({
     selector: 'vsf-address-form',
@@ -14,8 +16,12 @@ export class AddressFormComponent implements OnChanges {
     @Input() availableCountries: CountryFragment[];
     @Input() address: OrderAddressFragment | AddressFragment;
 
+    language$: Observable<string>;
     addressForm: UntypedFormGroup;
-    constructor(private formBuilder: UntypedFormBuilder) {
+    constructor(
+        private formBuilder: UntypedFormBuilder,
+        private stateService: StateService,
+    ) {
         this.addressForm = this.formBuilder.group({
             fullName: '',
             company: '',
@@ -27,6 +33,10 @@ export class AddressFormComponent implements OnChanges {
             countryCode: ['', Validators.required],
             phoneNumber: '',
         });
+    }
+    async ngOnInit() {
+        this.language$ = this.stateService
+            .select(state => state.languageCode);
     }
 
     ngOnChanges(changes: SimpleChanges) {

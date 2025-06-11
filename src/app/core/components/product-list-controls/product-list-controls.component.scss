@@ -1,77 +1,55 @@
-//@import "variables";
-//
-//:host {
-//    display: flex;
-//    justify-content: center;
-//    flex-wrap: wrap;
-//    flex-direction: column;
-//}
-//
-//.filters-title {
-//    padding: calc($spacer / 2);
-//    padding-left: calc($spacer / 3);
-//    text-transform: uppercase;
-//    border-bottom: 1px solid $gray-200;
-//    margin-bottom: calc($spacer / 2);
-//    color: $gray-600;
-//}
-//
-//.filters-button {
-//    text-transform: uppercase;
-//    color: $gray-600;
-//    border: none;
-//    background: none;
-//}
-//
-//.filters-wrapper {
-//    overflow: hidden;
-//    max-height: 0;
-//    &.expanded {
-//        max-height: initial;
-//    }
-//}
-//
-//.facet-group {
-//    margin-bottom: $spacer;
-//
-//    ul {
-//        display: flex;
-//        flex-wrap: wrap;
-//    }
-//
-//    li {
-//        transition: color 0.2s;
-//        label {
-//            display: flex;
-//            align-items: baseline;
-//            min-width: 77px;
-//        }
-//    }
-//
-//    &.enabled li:not(.active) {
-//        color: $gray-500;
-//    }
-//}
-//
-//button.facet-name {
-//    font-size: $font-size-sm;
-//    color: $gray-600;
-//    padding: 0 calc($spacer / 3);
-//    margin-right: calc($spacer / 2);
-//    text-transform: uppercase;
-//    transition: color 0.3s;
-//    border: none;
-//    background: none;
-//}
-//
-//@include media-breakpoint-up(md) {
-//    .filters-wrapper {
-//        max-height: initial;
-//    }
-//    .facet-group {
-//        ul {
-//            display: initial;
-//        }
-//    }
-//}
-//
+@import "variables";
+
+ul {
+    padding-left: 4px;
+}
+
+@media only screen and (max-width: 992px) {
+    .collapse-toggle {
+        background: #f9f9f9;
+        color: #3e77aa;
+        position: fixed;
+        z-index: 2;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        right: -4px;
+        top: 11rem;
+        border: 2px #3e77aa solid;
+        font-size: 1.1rem;
+    }
+
+    #basic-collapse-heading {
+        z-index: 5;
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        left: 0;
+        top: 0;
+        padding-left: 30%;
+        background: rgba(0,0,0, 0.7);
+        transition: all 300ms;
+
+        .container {
+            width: 100%;
+            height: 100%;
+            background: #f9f9f9;
+            padding: 0 12px 12px 20px;
+            z-index: 1;
+            position: relative;
+        }
+
+        &::before {
+            position: absolute;
+            content: "";
+        }
+
+        &.closed {
+            left: 0;
+            top: 0;
+            padding-left: 100%;
+            background: rgba(0,0,0, 0);
+            visibility: hidden;
+        }
+    }
+}

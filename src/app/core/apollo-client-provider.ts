@@ -134,6 +134,11 @@ export function apolloOptionsFactory(
                 `Bearer ${localStorage.getItem(AUTH_TOKEN_KEY) || null}`,
             );
 
+            // context.headers = new HttpHeaders().set(
+            //     'Vendure-token',
+            //     'lvxzhingmppyfnw72glg11111'
+            // );
+
             operation.setContext({...context});
         }
         return forward(operation);

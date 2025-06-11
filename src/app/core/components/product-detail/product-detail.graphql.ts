@@ -14,6 +14,10 @@ export const GET_PRODUCT_DETAIL = gql`
                 id
                 name
                 options {
+                    group {
+                        code
+                        name
+                    }
                     code
                     name
                 }
@@ -23,19 +27,6 @@ export const GET_PRODUCT_DETAIL = gql`
                 stockLevel
                 assets {
                     ...Asset
-                }
-            }
-            customFields {
-                related {
-                    id
-                    name
-                    slug
-                    variants {
-                        priceWithTax
-                    }
-                    featuredAsset {
-                        ...Asset
-                    }
                 }
             }
             facetValues {
@@ -88,6 +79,7 @@ export const GET_PRODUCT_COLORS = gql`
     query FindColors($id: ID) {
         colors(id: $id) {
             name
+            id
             products {
                 facetValues {
                     code
@@ -102,6 +94,9 @@ export const GET_PRODUCT_COLORS = gql`
                     languageCode
                     slug
                     name
+                }
+                variants {
+                    stockLevel
                 }
             }
         }

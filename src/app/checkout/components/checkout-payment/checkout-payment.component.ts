@@ -19,7 +19,7 @@ export class CheckoutPaymentComponent implements OnInit {
     cardNumber: string;
     expMonth: number;
     expYear: number;
-    paymentMethods$: Observable<GetEligiblePaymentMethodsQuery['eligiblePaymentMethods']>
+    paymentMethods$: Observable<GetEligiblePaymentMethodsQuery['eligiblePaymentMethods']>;
     paymentErrorMessage: string | undefined;
 
     constructor(private dataService: DataService,

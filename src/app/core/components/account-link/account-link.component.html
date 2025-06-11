@@ -5,7 +5,22 @@
     </a>
 </div>
 <ng-template #notLoggedIn>
-    <a class="btn btn-light text-muted" [routerLink]="['account/sign-in']">
+    <div class="block md:hidden mobile border-b text-center">
+        <div class="bg">
+            <div class="text text-sm">
+                {{ language === 'el'?
+                'Συνδεθείτε για να λαμβάνετε προτάσεις, προσωπικά μπόνους και εκπτώσεις.' :
+                'Sign in to receive offers, personal bonuses, and discounts.'
+                }}
+            </div>
+            <a class="btn btn-dark text-muted" [routerLink]="['account/sign-in']">
+                <fa-icon icon="user-circle"></fa-icon>
+                <span class="d-none d-sm-inline ml-1 ">{{ language === 'el'? 'Είσοδος': 'Sign In'}}</span>
+            </a>
+        </div>
+    </div>
+    <a class="btn btn-light text-muted hidden md:block" [routerLink]="['account/sign-in']">
         <fa-icon icon="user-circle"></fa-icon>
-        <span class="d-none d-sm-inline ml-1 ">{{ language === 'el'? 'Είσοδος': 'Sign In'}}</span></a>
+        <span class="d-none d-sm-inline ml-1 ">{{ language === 'el'? 'Είσοδος': 'Sign In'}}</span>
+    </a>
 </ng-template>

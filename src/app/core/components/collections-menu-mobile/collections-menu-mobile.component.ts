@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, HostBinding, Input, OnInit } from '@angular/core';
+import { Overlay, OverlayConfig } from '@angular/cdk/overlay';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -20,6 +21,8 @@ type CollectionItem = GetCollectionsQuery['collections']['items'][number];
 export class CollectionsMenuMobileComponent implements OnInit {
     @HostBinding('class.visible')
     @Input() visible = false;
+    @Input() language: string | null;
+    @Input() navigation: any;
 
     collectionTree$: Observable<RootNode<CollectionItem>>;
     selected0: string | null = null;
@@ -27,7 +30,9 @@ export class CollectionsMenuMobileComponent implements OnInit {
 
     constructor(private router: Router,
                 private stateService: StateService,
-                private dataService: DataService) { }
+                private dataService: DataService,
+                private overlay: Overlay
+    ) { }
 
     ngOnInit() {
         this.collectionTree$ = this.dataService.query<GetCollectionsQuery, GetCollectionsQueryVariables>(GET_COLLECTIONS, {

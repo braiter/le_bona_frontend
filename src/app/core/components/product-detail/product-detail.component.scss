@@ -9,6 +9,10 @@
     &:hover {
         background-color: #b2347d;
     }
+
+    &.disabled-button {
+        background-color: #d1d5db;
+    }
 }
 
 .active-color {
@@ -19,4 +23,12 @@
     margin-left: -0.125rem;
     margin-right: 0.375rem;
     margin-bottom: -0.125rem;
+}
+
+a.disabled {
+    opacity: 0.35;
+}
+
+.gallery {
+    min-width: 540px;
 }

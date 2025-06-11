@@ -1,16 +1,23 @@
-<div class="max-w-6xl mx-auto px-4">
+<div class="max-w-6xl mx-auto px-4 lg:relative"
+     *ngIf="(products$ | async) as products">
+    <div class="loading-indicator" [class.show]="loading">
+        <span class="lds-ring"><div></div><div></div><div></div><div></div></span>
+    </div>
     <ng-container *ngIf="collection$ | async as collection">
         <div class="flex justify-between items-center">
             <h2 class="text-3xl sm:text-5xl font-light my-8 collection-title">
                 {{collection.name}}
             </h2>
         </div>
-        <vsf-collection-breadcrumbs [breadcrumbs]="breadcrumbs$ | async"></vsf-collection-breadcrumbs>
+        <vsf-collection-breadcrumbs
+                [breadcrumbs]="breadcrumbs$ | async"
+        ></vsf-collection-breadcrumbs>
 
         <ng-container *ngIf="collection.children.length">
             <div class="max-w-2xl mx-auto py-16 sm:py-16 lg:max-w-none border-b mb-16">
-                <h2 class="text-2xl font-light text-gray-900">
-                    Collections
+                <h2 class="text-2xl font-light text-gray-900"
+                    *ngIf="language$ | async as language">
+                    {{ language === 'el' ? 'Συλλογές': 'Collections' }}
                 </h2>
                 <div class="mt-6 grid max-w-xs sm:max-w-none mx-auto sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
                     <vsf-collection-card *ngFor="let child of collection.children"
@@ -25,45 +32,63 @@
         Results for <span class="font-medium">"{{ term }}"</span>
     </h2>
 
-    <div class="mt-6 grid sm:grid-cols-5 gap-x-4">
-        <vsf-product-list-controls
-            class="mb-4"
-            [facetValues]="facetValues"
-            [activeFacetValueIds]="activeFacetValueIds$ | async"
-            [totalResults]="unfilteredTotalItems"
-            [language]="language$ | async"></vsf-product-list-controls>
-        <div class="sm:col-span-5 lg:col-span-4">
-            <div class="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-                <ng-container *ngIf="(totalResults$ | async) !== null; else placeholders">
-                    <vsf-product-card *ngFor="let product of products$ | async; trackBy: trackByProductId"
-                                      [product]="product"
-                                      [language]="language$ | async"></vsf-product-card>
-                </ng-container>
-                <ng-template #placeholders>
-                    <vsf-product-card *ngFor="let product of placeholderProducts"
-                                      [product]="product"></vsf-product-card>
-                </ng-template>
-            </div>
-            <div class="load-more flex-fill" *ngIf="displayLoadMore$ | async">
-                <button class="btn py-4 px-4 rounded-md mt-8 py-3 px-8 text-white btn-light btn-lg d-inline-flex align-items-center"
-                        (click)="loadMore()"
-                        [disabled]="loading$ | async"
-                        *ngIf="language$ | async as language">
-                    {{ language === 'el' ? 'Περισσότερα': 'Load more' }}
+    <div class="mt-6" *ngIf="totalResults; else noResults">
+        <div class="grid sm:grid-cols-5 gap-x-4 products-grid">
+            <vsf-product-list-controls
+                    [facetValues]="facetValues"
+                    [activeFacetValueIds]="activeFacetValueIds$ | async"
+                    [totalResults]="totalResults"
+                    [language]="language$ | async"></vsf-product-list-controls>
+            <div class="sm:col-span-5 lg:col-span-4">
+                <div class="text-right text-sm text-gray-500 mb-4 hidden md:block">
+                    <div *ngIf="!loading">
 
-                    <span [class.show]="loading$ | async"
-                          class="loading-indicator spinner-grow spinner-grow-sm"
-                          role="status"
-                          aria-hidden="true"></span>
-                </button>
+                        <div *ngIf="language$ | async as language">
+                            {{ products.length }}
+                            {{ language === 'el' ? 'από τα': 'of' }}
+                            {{ totalResults }}
+                            {{ language === 'el' ? 'αγαθά': 'products' }}
+                        </div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+                    <ng-container *ngIf="totalResults !== null; else placeholders">
+                        <vsf-product-card *ngFor="let product of products$ | async; trackBy: trackByProductId"
+                                          [product]="product"
+                                          [language]="language$ | async"></vsf-product-card>
+                    </ng-container>
+                    <ng-template #placeholders>
+                        <vsf-product-card *ngFor="let product of placeholderProducts"
+                                          [product]="product"></vsf-product-card>
+                    </ng-template>
+                </div>
+                <div class="text-right text-sm text-gray-500 mt-4">
+                    <div *ngIf="!loading">
+                        <div *ngIf="language$ | async as language">
+                            {{ products.length }}
+                            {{ language === 'el' ? 'από τα': 'of' }}
+                            {{ totalResults }}
+                            {{ language === 'el' ? 'αγαθά': 'products' }}
+                        </div>
+                    </div>
+                </div>
+                <div class="load-more flex-fill" *ngIf="products.length < totalResults">
+                    <button class="btn py-4 px-4 rounded-md mt-8 py-3 px-8 text-white btn-light btn-lg d-inline-flex align-items-center"
+                            (click)="loadMore()"
+                            [disabled]="loading"
+                            *ngIf="language$ | async as language">
+                        {{ language === 'el' ? 'Περισσότερα': 'Load more' }}
+                    </button>
+                </div>
             </div>
         </div>
+
     </div>
 
     <ng-template #noResults>
-        <div class="no-results col-12">
-            <p class="h1">No results</p>
-            <fa-icon icon="sad-cry" size="10x"></fa-icon>
+        <div class="no-results col-12 pt-10">
+            <p class="text-lg my-8">No results</p>
+            <fa-icon icon="ghost" size="4x" class="mt-4 text-gray-300"></fa-icon>
         </div>
     </ng-template>
 </div>

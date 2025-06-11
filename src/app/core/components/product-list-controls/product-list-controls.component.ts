@@ -17,12 +17,12 @@ export interface FacetWithValues {
 @Component({
     selector: 'vsf-product-list-controls',
     templateUrl: './product-list-controls.component.html',
-    // styleUrls: ['./product-list-controls.component.scss'],
+    styleUrls: ['./product-list-controls.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductListControlsComponent implements OnChanges {
     @Input() activeFacetValueIds: string[] = [];
-    @Input() facetValues: SearchProductsQuery['search']['facetValues'] | null;
+    @Input() facetValues: SearchProductsQuery['getProductsForCategory']['facetValues'] | null;
     @Input() totalResults = 0;
     @Input() language: string | null;
     facets: FacetWithValues[];
@@ -32,7 +32,7 @@ export class ProductListControlsComponent implements OnChanges {
     }
 
     get filtersExpanded(): boolean {
-        return this.manuallyExpanded || this.activeFacetValueIds.length > 0;
+        return this.manuallyExpanded;
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -55,6 +55,10 @@ export class ProductListControlsComponent implements OnChanges {
                 noScroll: true,
             },
         });
+
+        setTimeout(() => {
+            this.manuallyExpanded = !this.manuallyExpanded;
+        }, 300);
     }
 
     toggleFacetValueId(id: string): string[] {
@@ -66,7 +70,7 @@ export class ProductListControlsComponent implements OnChanges {
         return item.id;
     }
 
-    private groupFacetValues(facetValues: SearchProductsQuery['search']['facetValues'] | null): FacetWithValues[] {
+    private groupFacetValues(facetValues: SearchProductsQuery['getProductsForCategory']['facetValues'] | null): FacetWithValues[] {
         if (!facetValues) {
             return [];
         }

@@ -32,9 +32,10 @@ export class HomePageComponent implements OnInit {
 
 
         this.collections$ = this.language$.pipe(switchMap(language => {
+            console.log(language);
             this.heroImage = this.getHeroImageUrl();
             return this.dataService.query<GetCollectionsQuery>(GET_COLLECTIONS, {
-                options: { take: 50 }, languageCode: language
+                options: { take: 50, topLevelOnly: true }, languageCode: language
             }, 'network-only').pipe(map(({collections}) => collections.items));
         }));
 

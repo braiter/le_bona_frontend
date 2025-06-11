@@ -4,29 +4,29 @@ import {gql} from 'apollo-angular';
 import { ASSET_FRAGMENT } from '../../../common/graphql/fragments.graphql';
 
 export const SEARCH_PRODUCTS = gql`
-    query SearchProducts($input: SearchInput!) {
-        search(input: $input) {
+    query getProductsForCategory($input: SearchInput!) {
+        getProductsForCategory(input: $input) {
             items {
-                productId
+                id
                 slug
                 productName
-                description
-                priceWithTax {
-                    ... on PriceRange {
-                        min
-                        max
-                    }
-                }
                 productAsset {
+                    ...Asset
+                }
+                facetValues {
                     id
-                    preview
-                    focalPoint {
-                        x
-                        y
+                    name
+                    facet {
+                        id
+                        name
+                        code
                     }
                 }
-                facetIds
-                facetValueIds
+                priceWithTax {
+                    min
+                    max
+                }
+                inStock
             }
             totalItems
             facetValues {
@@ -43,6 +43,7 @@ export const SEARCH_PRODUCTS = gql`
             }
         }
     }
+    ${ASSET_FRAGMENT}
 `;
 
 export const GET_COLLECTION = gql`

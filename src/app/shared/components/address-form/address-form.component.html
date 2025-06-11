@@ -1,11 +1,13 @@
 <form [formGroup]="addressForm">
-    <div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
+    <div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4"
+         *ngIf="language$ | async as language">
         <div>
             <label
                 htmlFor="fullName"
                 class="block text-sm font-medium text-gray-700"
             >
-                First name
+                {{ language === 'el'? 'Ονοματεπώνυμο': 'Full Name'}}
+                <span class="text-red-400">*</span>
             </label>
             <div class="mt-1">
                 <input
@@ -14,17 +16,19 @@
                     name="fullName"
                     formControlName="fullName"
                     autoComplete="given-name"
+                    required
                     class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
                 />
             </div>
         </div>
 
-        <div class="sm:col-span-2">
+        <div>
             <label
                 htmlFor="company"
                 class="block text-sm font-medium text-gray-700"
             >
-                Company
+                {{ language === 'el'? 'Εταιρεία': 'Company'}}
+                <span class="text-red-400">*</span>
             </label>
             <div class="mt-1">
                 <input
@@ -32,7 +36,30 @@
                     name="company"
                     id="company"
                     formControlName="company"
+                    required
                     class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500
+            sm:text-sm"
+                />
+            </div>
+        </div>
+
+        <div class="sm:col-span-2">
+            <label
+                    htmlFor="phoneNumber"
+                    class="block text-sm font-medium text-gray-700"
+            >
+                {{ language === 'el'? 'Τηλ/Κιν': 'Phone' }}
+                <span class="text-red-400">*</span>
+            </label>
+            <div class="mt-1">
+                <input
+                        type="text"
+                        name="phoneNumber"
+                        id="phoneNumber"
+                        formControlName="phoneNumber"
+                        autoComplete="tel"
+                        required
+                        class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500
             sm:text-sm"
                 />
             </div>
@@ -43,7 +70,8 @@
                 htmlFor="streetLine1"
                 class="block text-sm font-medium text-gray-700"
             >
-                Address
+                {{ language === 'el'? 'Διεύθυνση': 'Address' }}
+                <span class="text-red-400">*</span>
             </label>
             <div class="mt-1">
                 <input
@@ -52,6 +80,7 @@
                     id="streetLine1"
                     formControlName="streetLine1"
                     autoComplete="street-address"
+                    required
                     class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500
             sm:text-sm"
                 />
@@ -63,7 +92,7 @@
                 htmlFor="streetLine2"
                 class="block text-sm font-medium text-gray-700"
             >
-                Apartment, suite, etc.
+                {{ language === 'el'? 'Διαμέρισμα, σουίτα κ.λπ.': 'Apartment, suite, etc.' }}
             </label>
             <div class="mt-1">
                 <input
@@ -82,7 +111,8 @@
                 htmlFor="city"
                 class="block text-sm font-medium text-gray-700"
             >
-                City
+                {{ language === 'el'? 'Πόλη': 'City' }}
+                <span class="text-red-400">*</span>
             </label>
             <div class="mt-1">
                 <input
@@ -102,7 +132,8 @@
                 htmlFor="countryCode"
                 class="block text-sm font-medium text-gray-700"
             >
-                Country
+                {{ language === 'el'? 'Χώρα': 'Country' }}
+                <span class="text-red-400">*</span>
             </label>
             <div class="mt-1">
                 <select
@@ -120,7 +151,7 @@
                 htmlFor="province"
                 class="block text-sm font-medium text-gray-700"
             >
-                State / Province
+                {{ language === 'el'? 'Περιφέρεια': 'State / Province' }}
             </label>
             <div class="mt-1">
                 <input
@@ -140,7 +171,8 @@
                 htmlFor="postalCode"
                 class="block text-sm font-medium text-gray-700"
             >
-                Postal code
+                {{ language === 'el'? 'Ταχυδρομικός κώδικας': 'Postal code' }}
+                <span class="text-red-400">*</span>
             </label>
             <div class="mt-1">
                 <input
@@ -149,26 +181,6 @@
                     id="postalCode"
                     formControlName="postalCode"
                     autoComplete="postal-code"
-                    class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500
-            sm:text-sm"
-                />
-            </div>
-        </div>
-
-        <div class="sm:col-span-2">
-            <label
-                htmlFor="phoneNumber"
-                class="block text-sm font-medium text-gray-700"
-            >
-                Phone
-            </label>
-            <div class="mt-1">
-                <input
-                    type="text"
-                    name="phoneNumber"
-                    id="phoneNumber"
-                    formControlName="phoneNumber"
-                    autoComplete="tel"
                     class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500
             sm:text-sm"
                 />

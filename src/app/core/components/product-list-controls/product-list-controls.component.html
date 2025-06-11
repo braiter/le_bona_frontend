@@ -1,22 +1,37 @@
 <div class="lg:hidden">
-    <button class="border border-primary-100 rounded bg-primary-50 p-2 text-sm text-primary-700" (click)="manuallyExpanded = !manuallyExpanded">
-        <fa-icon icon="filter" class="mr-2"></fa-icon>
-        Filters
+    <button class="rounded p-2 text-sm collapse-toggle"
+            (click)="manuallyExpanded = !manuallyExpanded"
+            aria-expanded="false"
+            aria-controls="basic-collapse-heading"
+            data-collapse="#basic-collapse-heading">
+        <fa-icon icon="filter"></fa-icon>
     </button>
 </div>
-<div class="mb-4 lg:block"
-     [ngClass]="filtersExpanded ? 'block' : 'hidden'">
-    <div *ngFor="let facet of facets; trackBy:trackById" class="text-sm"
-         [class.enabled]="activeFacetValueIds.length">
-        <div class="py-3 font-medium text-gray-900 uppercase">{{ facet.name | titlecase }}</div>
-        <ul class="space-y-4">
-            <li *ngFor="let value of facet.values; trackBy:trackById" [class.active]="isActive(value.id)">
-                <label class=""><input type="checkbox" [checked]="isActive(value.id)"
-                                       (change)="toggleFacetValueIdInRoute(value.id)"
-                                       class="h-4 w-4 border-gray-300 rounded text-primary-600 focus:ring-primary-500">
-                    <span class="ml-3 text-sm text-gray-600">{{ value.name }}</span>
-                </label>
-            </li>
-        </ul>
+<div id="basic-collapse-heading"
+     class="mb-4 lg:block w-full overflow-hidden transition-[height] duration-300"
+     [ngClass]="filtersExpanded ? 'open' : 'closed'"
+>
+    <div class="absolute inset-0 md:hidden background transition-opacity ease-in-out duration-500"
+         (click)="manuallyExpanded = !manuallyExpanded"></div>
+    <div class="container text-right">
+        <button class="lg:hidden p-2 text-lg"
+                (click)="manuallyExpanded = !manuallyExpanded">
+            <fa-icon icon="close"></fa-icon>
+        </button>
+        <div *ngFor="let facet of facets; trackBy:trackById" class="text-sm text-left"
+             [class.enabled]="activeFacetValueIds.length">
+            <div class="py-3 font-medium text-gray-900 uppercase">{{ facet.name | titlecase }}</div>
+            <ul class="space-y-4">
+                <li *ngFor="let value of facet.values; trackBy:trackById" [class.active]="isActive(value.id)">
+                    <label class="">
+                        <input type="checkbox"
+                               [checked]="isActive(value.id)"
+                               (change)="toggleFacetValueIdInRoute(value.id)"
+                               class="h-4 w-4 border-gray-300 rounded text-primary-600 focus:ring-primary-500">
+                        <span class="ml-3 text-sm text-gray-600">{{ value.name }}</span>
+                    </label>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>

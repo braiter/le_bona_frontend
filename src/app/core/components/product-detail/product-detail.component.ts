@@ -5,9 +5,16 @@ import { filter, map, switchMap, withLatestFrom } from 'rxjs/operators';
 
 import {
     AddToCartMutation,
-    AddToCartMutationVariables, GetProductColorsQuery, GetProductColorsQueryVariables,
+    AddToCartMutationVariables,
+    GetProductColorsQuery,
+    GetProductColorsQueryVariables,
     GetProductDetailQuery,
-    GetProductDetailQueryVariables, SearchProductsQuery, SearchProductsQueryVariables, FacetValue, Product
+    GetProductDetailQueryVariables,
+    SearchProductsQuery,
+    SearchProductsQueryVariables,
+    FacetValue,
+    Product,
+    ProductVariant
 } from '../../../common/generated-types';
 import { notNullOrUndefined } from '../../../common/utils/not-null-or-undefined';
 import { DataService } from '../../providers/data/data.service';
@@ -34,6 +41,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     selectedAsset: { id: string; preview: string; };
     qtyInCart: { [id: string]: number; } = {};
     selectedVariant: Variant;
+    selectedVariantId: string;
     color: string| undefined;
     colors: Array<any> = [];
     colors$: Subscription;
@@ -95,17 +103,18 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
             withLatestFrom(lastCollectionSlug$),
         ).subscribe(([product, lastCollectionSlug]) => {
             this.product = product;
-            this.relatedProducts = product.customFields.related.map((item: any) => ({
-                ...item,
-                productAsset: item.featuredAsset,
-                productName: item.name,
-                priceWithTax: item.variants[0].priceWithTax
-            }));
+            // this.relatedProducts = product.customFields.related.map((item: any) => ({
+            //     ...item,
+            //     productAsset: item.featuredAsset,
+            //     productName: item.name,
+            //     priceWithTax: item.variants[0].priceWithTax
+            // }));
             if (this.product?.featuredAsset) {
                 this.selectedAsset = this.product.featuredAsset;
             }
             this.selectedVariant = product.variants[0];
-            console.log(this.selectedVariant);
+            this.selectedVariantId = this.selectedVariant.id;
+
             const collection = this.getMostRelevantCollection(product.collections, lastCollectionSlug);
             this.breadcrumbs = collection ? collection.breadcrumbs : [];
 
@@ -120,7 +129,21 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
                 id: product.facetValues.find((facet: FacetValue) => facet.facet.code === 'category')?.id,
                 languageCode: language
             },'network-only').pipe(
-                map(data => data.colors)
+                map(data => {
+                    return data.colors.map(color => {
+                        return {
+                            ...color,
+                            products: color.products.map( item => {
+                                return {
+                                    ...item,
+                                    inStock: !!item.variants.find( variant => {
+                                        return variant.stockLevel !== 'OUT_OF_STOCK';
+                                    } )
+                                };
+                            })
+                        };
+                    });
+                })
             ).subscribe(colors => {
                 this.colors = colors;
             });
@@ -192,5 +215,12 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         })[0];
     }
 
-    protected readonly undefined = undefined;
+    selectVariant(variant: ProductVariant) {
+        this.selectedVariantId = variant.id;
+        this.selectedVariant = variant;
+    }
+
+    getVariantId(variant: ProductVariant) {
+        return variant.id;
+    }
 }

@@ -83,4 +83,6 @@ export class AssetGalleryComponent implements OnInit, OnChanges, AfterViewInit {
         const index = this.assets.findIndex(a => a.id === assetId);
         this.gallery.loadAndOpen(index);
     }
+
+    protected readonly undefined = undefined;
 }

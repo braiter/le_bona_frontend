@@ -6,15 +6,37 @@
     align-items: flex-start;
     position: fixed;
     height: 100vh;
-    width: calc(100vw - 3rem);
+    width: 100%;
     top: 0;
     left: 0;
     bottom: 0;
-    transform: translateX(-102vw) translateX(3rem);
+    transform: translateX(-102vw);
     transition: transform 0.3s;
     overflow: auto;
 
     &.visible {
         transform: translateX(0);
     }
+}
+
+.overlay-container {
+    width: 320px;
+}
+
+.background {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.popup-header {
+    background: #272727;
+    color: #ffffff;
+    margin-top: -1.5rem;
+
+    .logo-link img {
+        width: 150px;
+    }
+}
+
+.catalog {
+
 }

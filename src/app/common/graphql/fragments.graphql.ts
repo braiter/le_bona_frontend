@@ -41,6 +41,15 @@ export const CART_FRAGMENT = gql`
                 }
                 translations {
                     languageCode
+                    name
+                }
+                options {
+                    group {
+                        code
+                        name
+                    }
+                    code
+                    name
                 }
             }
             discounts {

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {StateService} from "../../providers/state/state.service";
 import { NgEventBus } from 'ng-event-bus';
-import { TranslateService } from '@ngx-translate/core';
+// import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'vsf-language-selector',
@@ -15,7 +15,7 @@ export class LanguageSelectorComponent {
   constructor(
       private stateService: StateService,
       private eventBus: NgEventBus,
-      private translator: TranslateService
+      // private translator: TranslateService
   ) {}
 
   ngOnInit() {
@@ -27,7 +27,10 @@ export class LanguageSelectorComponent {
   selectLanguage (language: string) {
     this.stateService.setState('languageCode', language);
     localStorage.setItem('languageCode', language);
+    // window.history.push()
+    const url = location.pathname.split('/');
+    url[1] = language;
 
-    this.translator.use(language);
+    window.location.href = url.join('/');
   }
 }

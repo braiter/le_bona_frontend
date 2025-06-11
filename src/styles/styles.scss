@@ -11,6 +11,10 @@
     .input-text {
         @apply block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-primary-500 sm:text-sm;
     }
+
+    .btn.btn-standart {
+        @apply px-6 py-1 border border-transparent rounded-md shadow-sm text-base bg-primary-600 text-white;
+    }
 }
 
 body {
@@ -26,10 +30,17 @@ body {
     }
 }
 
-.btn-primary {
+.btn-primary:not(.disabled) {
     background-color: #c7418f;
 
     &:hover {
         background-color: #b2347d;
+    }
+}
+
+.product-description {
+    ol {
+        list-style: auto;
+        padding: 0 0 0 16px;
     }
 }

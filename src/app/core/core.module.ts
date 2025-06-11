@@ -1,6 +1,6 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import {NgModule, LOCALE_ID, Inject} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { ApolloModule } from 'apollo-angular';
@@ -31,6 +31,7 @@ import { buildIconLibrary } from './icon-library';
 import { DefaultInterceptor } from './providers/data/interceptor';
 import {CollectionsListPageComponent} from "./components/collections-list-page/collections-list-page.component";
 import {LanguageSelectorComponent} from "./components/language-selector/language-selector.component";
+// import {TranslatePipe} from "@ngx-translate/core";
 
 const CORE_COMPONENTS = [
     ProductListComponent,
@@ -63,10 +64,11 @@ const CORE_COMPONENTS = [
         SharedModule,
         BrowserModule,
         ApolloModule,
+        // TranslatePipe,
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: DefaultInterceptor, multi: true },
-        { provide: APP_BASE_HREF, useValue: environment.baseHref },
+        { provide: APP_BASE_HREF + '' + LOCALE_ID, useValue: environment.baseHref },
         APOLLO_CLIENT_PROVIDER,
     ],
     exports: [

@@ -2996,6 +2996,7 @@ export type SearchResultPrice = PriceRange | SinglePrice;
 export type SearchResultSortParameter = {
   name?: InputMaybe<SortOrder>;
   price?: InputMaybe<SortOrder>;
+  // inStock?: InputMaybe<SortOrder>;
 };
 
 export type Seller = Node & {
@@ -3566,7 +3567,10 @@ export type GetProductColorsQuery = {
     name: string;
     products: Array<{
       facetValues: Array<FacetValue>,
-      translations: Array<CollectionTranslation>
+      translations: Array<CollectionTranslation>,
+      variants: Array<{
+        stockLevel: string
+      }>
     }>
   }>
 }
@@ -3593,7 +3597,17 @@ export type GetProductDetailQuery = {
       price: any,
       priceWithTax: any,
       sku: string,
-      options: Array<{ __typename?: 'ProductOption', code: string, name: string }>,
+      stockLevel: string,
+      options: Array<{
+        __typename?: 'ProductOption',
+        code: string,
+        name: string,
+        group: {
+          __typename?: 'ProductOptionGroup',
+          code: string,
+          name: string,
+        }
+      }>,
       assets: Array<{
         __typename?: 'Asset',
         id: string,
@@ -3672,12 +3686,15 @@ export type AddToCartMutationVariables = Exact<{
 export type AddToCartMutation = { __typename?: 'Mutation', addItemToOrder: { __typename?: 'InsufficientStockError', errorCode: ErrorCode, message: string, order: { __typename?: 'Order', id: string, code: string, state: string, active: boolean, updatedAt: any, orderPlacedAt?: any, totalQuantity: number, subTotal: any, subTotalWithTax: any, total: any, totalWithTax: any, shipping: any, shippingWithTax: any, lines: Array<{ __typename?: 'OrderLine', id: string, unitPrice: any, unitPriceWithTax: any, quantity: number, linePriceWithTax: any, discountedLinePriceWithTax: any, featuredAsset?: { __typename?: 'Asset', id: string, width: number, height: number, name: string, preview: string, focalPoint?: { __typename?: 'Coordinate', x: number, y: number } }, productVariant: { __typename?: 'ProductVariant', id: string, name: string }, discounts: Array<{ __typename?: 'Discount', amount: any, amountWithTax: any, description: string, adjustmentSource: string, type: AdjustmentType }> }>, shippingLines: Array<{ __typename?: 'ShippingLine', priceWithTax: any, shippingMethod: { __typename?: 'ShippingMethod', id: string, code: string, name: string, description: string } }>, discounts: Array<{ __typename?: 'Discount', amount: any, amountWithTax: any, description: string, adjustmentSource: string, type: AdjustmentType }> } } | { __typename?: 'NegativeQuantityError', errorCode: ErrorCode, message: string } | { __typename?: 'Order', id: string, code: string, state: string, active: boolean, updatedAt: any, orderPlacedAt?: any, totalQuantity: number, subTotal: any, subTotalWithTax: any, total: any, totalWithTax: any, shipping: any, shippingWithTax: any, lines: Array<{ __typename?: 'OrderLine', id: string, unitPrice: any, unitPriceWithTax: any, quantity: number, linePriceWithTax: any, discountedLinePriceWithTax: any, featuredAsset?: { __typename?: 'Asset', id: string, width: number, height: number, name: string, preview: string, focalPoint?: { __typename?: 'Coordinate', x: number, y: number } }, productVariant: { __typename?: 'ProductVariant', id: string, name: string }, discounts: Array<{ __typename?: 'Discount', amount: any, amountWithTax: any, description: string, adjustmentSource: string, type: AdjustmentType }> }>, shippingLines: Array<{ __typename?: 'ShippingLine', priceWithTax: any, shippingMethod: { __typename?: 'ShippingMethod', id: string, code: string, name: string, description: string } }>, discounts: Array<{ __typename?: 'Discount', amount: any, amountWithTax: any, description: string, adjustmentSource: string, type: AdjustmentType }> } | { __typename?: 'OrderLimitError', errorCode: ErrorCode, message: string } | { __typename?: 'OrderModificationError', errorCode: ErrorCode, message: string } };
 
 export type SearchProductsQueryVariables = Exact<{
+  context?: { headers: {
+      'vendure-token': string
+    } };
   input: SearchInput;
   languageCode?: Scalars['String'];
 }>;
 
 
-export type SearchProductsQuery = { __typename?: 'Query', search: { __typename?: 'SearchResponse', totalItems: number, items: Array<{ __typename?: 'SearchResult', productId: string, slug: string, productName: string, description: string, priceWithTax: { __typename?: 'PriceRange', min: any, max: any } | { __typename?: 'SinglePrice' }, productAsset?: { __typename?: 'SearchResultAsset', id: string, preview: string, focalPoint?: { __typename?: 'Coordinate', x: number, y: number } }, facetIds: Array<Scalars['ID']>, facetValueIds: Array<Scalars['ID']>; }>, facetValues: Array<{ __typename?: 'FacetValueResult', count: number, facetValue: { __typename?: 'FacetValue', id: string, name: string, facet: { __typename?: 'Facet', id: string, name: string } } }> } };
+export type SearchProductsQuery = { __typename?: 'Query', getProductsForCategory: { __typename?: 'SearchResponse', totalItems: number, items: Array<{ __typename?: 'SearchResult', productId: string, slug: string, productName: string, description: string, priceWithTax: { __typename?: 'PriceRange', min: any, max: any } | { __typename?: 'SinglePrice' }, productAsset?: { __typename?: 'SearchResultAsset', id: string, preview: string, focalPoint?: { __typename?: 'Coordinate', x: number, y: number } }, facetIds: Array<Scalars['ID']>, facetValueIds: Array<Scalars['ID']>; facetValues: Array<{ __typename?: 'FacetValueResult', id:Scalars['ID'], count: number, name: string, facet: { __typename?: 'FacetValue', id: string, name: string, code: string } }>}>, facetValues: Array<{ __typename?: 'FacetValueResult', count: number, facetValue: { __typename?: 'FacetValue', id: string, name: string, facet: { __typename?: 'Facet', id: string, name: string, code: string } } }> } };
 
 export type GetCollectionQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']>;

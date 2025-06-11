@@ -28,6 +28,7 @@ export class CartDrawerComponent implements OnInit {
 
     cart$: Observable<GetActiveOrderQuery['activeOrder']>;
     isEmpty$: Observable<boolean>;
+    language$: Observable<string>;
 
     constructor(private dataService: DataService,
                 private stateService: StateService,
@@ -45,6 +46,9 @@ export class CartDrawerComponent implements OnInit {
         this.isEmpty$ = this.cart$.pipe(
             map(cart => !cart || cart.lines.length === 0),
         );
+
+        this.language$ = this.stateService
+            .select(state => state.languageCode);
     }
 
     setQuantity(event: { itemId: string; quantity: number; }) {

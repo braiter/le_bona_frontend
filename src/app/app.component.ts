@@ -30,14 +30,15 @@ export class AppComponent implements OnInit {
         ],
         company: [
             {name: 'About', href: '#'},
-            {name: 'Blog', href: '#'},
-            {name: 'Corporate responsibility', href: '#'},
-            {name: 'Press', href: '#'},
+            {name: 'Contacts', href: '#'},
+            // {name: 'Blog', href: '#'},
+            // {name: 'Corporate responsibility', href: '#'},
+            // {name: 'Press', href: '#'},
         ],
         topMenu: [
-            {key: 'header.top_menu.products', href: '/categories', active: false},
-            {key: 'header.top_menu.about', href: '/about', active: false},
-            {key: 'header.top_menu.contacts', href: '/contacts', active: false},
+            {key: $localize`header.top_menu.products`, href: '/categories', active: false},
+            {key: $localize`header.top_menu.about`, href: '/about', active: false},
+            {key: $localize`header.top_menu.contacts`, href: '/contacts', active: false},
         ]
     };
 

@@ -8,18 +8,26 @@ a {
     color: #272727;
 }
 
-.logo-link {
-    display: flex;
-    align-items: center;
+//.logo-link {
+//    display: flex;
+//    align-items: center;
+//
+//    img.logo {
+//        max-height: 42px;
+//        animation: hue-rotate 10s infinite;
+//    }
+//
+//    &:link, &:visited {
+//        color: #0e95c7;
+//        font-size: 22px;
+//    }
+//}
 
-    img.logo {
-        max-height: 42px;
-        animation: hue-rotate 10s infinite;
-    }
+.main-logo {
+    width: 18rem;
 
-    &:link, &:visited {
-        color: #0e95c7;
-        font-size: 22px;
+    &.mobile {
+        width: 1.5rem;
     }
 }
 
@@ -31,4 +39,12 @@ a {
   100% {
     filter: hue-rotate(360deg) brightness(0.9);
   }
+}
+
+@media only screen and (max-width: 768px) {
+    .layout-header {
+        & > div {
+            margin: 0 1rem;
+        }
+    }
 }

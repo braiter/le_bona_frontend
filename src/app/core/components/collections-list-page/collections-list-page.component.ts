@@ -16,7 +16,7 @@ export class CollectionsListPageComponent {
 
     constructor(private dataService: DataService) {
         this.collections$ = this.dataService.query<GetCollectionsQuery>(GET_COLLECTIONS, {
-            options: {take: 50},
+            options: {take: 50, topLevelOnly: true},
         }).pipe(map(({collections}) => collections.items));
     }
 }

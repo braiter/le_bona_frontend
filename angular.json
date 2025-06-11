@@ -13,7 +13,9 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "localize": ["en-US"],
+            "localize": [
+              "el", "en"
+            ],
             "outputPath": "dist/browser",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -203,6 +205,16 @@
           },
           "configurations": {
             "production": {}
+          }
+        }
+      },
+      "i18n": {
+        "locales": {
+          "el": {
+            "translation": "src/locales/messages.el.xlf"
+          },
+          "en": {
+            "translation": "src/locales/messages.xlf"
           }
         }
       }

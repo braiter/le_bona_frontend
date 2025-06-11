@@ -3,6 +3,8 @@ import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
 import { GetCollectionQuery } from '../../../common/generated-types';
 import { AssetPreviewPipe } from '../../pipes/asset-preview.pipe';
+import {Observable} from "rxjs";
+import {StateService} from "../../../core/providers/state/state.service";
 
 @Component({
     selector: 'vsf-collection-card',
@@ -13,8 +15,11 @@ import { AssetPreviewPipe } from '../../pipes/asset-preview.pipe';
 export class CollectionCardComponent implements OnChanges {
     @Input() collection: NonNullable<GetCollectionQuery['collection']>;
     backgroundImage: SafeStyle;
+    language$: Observable<string>;
 
-    constructor(private sanitizer: DomSanitizer) {}
+    constructor(
+        private sanitizer: DomSanitizer,
+    ) {}
 
     ngOnChanges() {
         if (this.collection.featuredAsset) {

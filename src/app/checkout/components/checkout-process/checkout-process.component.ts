@@ -21,12 +21,15 @@ export class CheckoutProcessComponent implements OnInit {
     nextStates$: Observable<string[]>;
     activeStage$: Observable<number>;
     signedIn$: Observable<boolean>;
+    language$: Observable<string>;
     constructor(private dataService: DataService,
                 private stateService: StateService,
                 private route: ActivatedRoute,
                 private router: Router) { }
 
     ngOnInit() {
+        this.language$ = this.stateService
+            .select(state => state.languageCode);
         this.signedIn$ = this.stateService.select(state => state.signedIn);
         this.cart$ = this.route.data.pipe(switchMap(data => data.activeOrder as Observable<GetOrderForCheckoutQuery['activeOrder']>));
         this.nextStates$ = this.dataService.query<GetNextOrderStatesQuery>(GET_NEXT_ORDER_STATES).pipe(

@@ -90,3 +90,14 @@ export const TRANSITION_TO_ARRANGING_PAYMENT = gql`
     ${CART_FRAGMENT}
     ${ERROR_RESULT_FRAGMENT}
 `;
+
+export const TRANSITION_TO_FINISH = gql`
+    mutation TransitionToFinish {
+        transitionOrderToState(state: "PaymentSettled") {
+            ...Cart
+            ...ErrorResult
+        }
+    }
+    ${CART_FRAGMENT}
+    ${ERROR_RESULT_FRAGMENT}
+`;

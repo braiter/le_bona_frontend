@@ -2930,6 +2930,8 @@ input SearchInput {
 input SearchResultSortParameter {
     name: SortOrder
     price: SortOrder
+    productInStock: SortOrder
+    id: SortOrder
 }
 
 "Operators for filtering on a list of String fields"
