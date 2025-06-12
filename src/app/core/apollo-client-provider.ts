@@ -3,7 +3,6 @@ import { HttpHeaders } from '@angular/common/http';
 import { FactoryProvider, Optional, PLATFORM_ID } from '@angular/core';
 import { makeStateKey, TransferState } from '@angular/platform-browser';
 import { ApolloClientOptions, ApolloLink, InMemoryCache } from '@apollo/client/core';
-import { REQUEST } from '@nguniversal/express-engine/tokens';
 import { APOLLO_OPTIONS } from 'apollo-angular';
 import { HttpLink, Options } from 'apollo-angular/http';
 import { Request } from 'express';
@@ -17,7 +16,7 @@ let apolloCache: InMemoryCache;
 export const APOLLO_CLIENT_PROVIDER: FactoryProvider = {
     provide: APOLLO_OPTIONS,
     useFactory: apolloOptionsFactory,
-    deps: [HttpLink, PLATFORM_ID, TransferState, [new Optional(), REQUEST]],
+    deps: [HttpLink, PLATFORM_ID, TransferState, [new Optional()]],
 };
 
 function mergeFields(existing: any, incoming: any) {
