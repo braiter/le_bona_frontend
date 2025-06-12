@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en-US" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="6858189985744032711" datatype="html">
+        <source>header.top_menu.products</source>
+        <target>Products</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.component.ts</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3218657148530676799" datatype="html">
+        <source>header.top_menu.about</source>
+        <target>About</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.component.ts</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8460677548016292659" datatype="html">
+        <source>header.top_menu.contacts</source>
+        <target>Contacts</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.component.ts</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="09666fba8ee90ed26aca53a06224580613edba1c" datatype="html">
+        <source> In stock </source>
+        <target>In stock</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/components/product-card/product-card.component.html</context>
+          <context context-type="linenumber">53,55</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="e25ff14c5fb9b8b3883269d35625c71b54ce1194" datatype="html">
+        <source>Out of stock</source>
+        <target>Out of stock</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/components/product-card/product-card.component.html</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="46ab9c2de131e66fdd9d401425a3818c2cb55c03" datatype="html">
+        <source> In stock </source>
+        <target>In stock</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/components/product-detail/product-detail.component.html</context>
+          <context context-type="linenumber">103,105</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="072959b74bf87a72a00b00cb7d459d4ccd5b1c9f" datatype="html">
+        <source> Low stock </source>
+        <target>Low stock</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/components/product-detail/product-detail.component.html</context>
+          <context context-type="linenumber">106,108</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="0abe867df84eb5352d027a45f402205addc984f9" datatype="html">
+        <source> Out of stock </source>
+        <target>Out of stock</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/components/product-detail/product-detail.component.html</context>
+          <context context-type="linenumber">109,111</context>
+        </context-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
